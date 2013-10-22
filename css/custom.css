@@ -1,0 +1,198 @@
+/*
+ * Override night.css
+ */
+div.reveal {
+  font-size: 34px;
+}
+
+/*
+ * which means I want to override reveal.js
+ */
+.reveal h3 {
+  font-size: 1.46em;
+}
+
+/*
+ * night.css's body:
+ */
+
+.default .backgrounds .present {
+  background-color: #111111;
+}
+
+.teal-bg .backgrounds .present {
+  background-color: teal;
+}
+
+.blue-bg .backgrounds .present {
+  background-color: #330066;
+}
+
+.wip .backgrounds .present {
+  background-color: red;
+}
+
+/*
+ * Override default of 0.2s ease
+ */
+.reveal .slides section .fragment,
+.reveal .slides section .fragment-parent {
+  -webkit-transition: all 0.4s ease;
+  -moz-transition: all 0.4s ease;
+  -ms-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+
+.reveal .slides section .fragment.slow {
+  -webkit-transition: all 0.7s ease;
+  -moz-transition: all 0.7s ease;
+  -ms-transition: all 0.7s ease;
+  -o-transition: all 0.7s ease;
+  transition: all 0.7s ease;
+}
+
+.reveal .slides section .fragment.slower {
+  -webkit-transition: all 1.1s ease;
+  -moz-transition: all 1.1s ease;
+  -ms-transition: all 1.1s ease;
+  -o-transition: all 1.1s ease;
+  transition: all 1.1s ease;
+}
+
+.reveal .slides section .fragment-parent {
+  position: relative;
+}
+
+.reveal .slides section .fragment-parent .fragment {
+  margin: 0;
+}
+
+/* I'm sorry tomorrow-night-bright!!! I'm sorry! */
+pre code {
+  background: #181818;
+}
+
+/* from tomorrow-night-bright.css */
+.reveal .slides section div.code {
+  background: black;
+  margin: 15px auto;
+  width: 90%;
+}
+
+.reveal .slides section div.code pre {
+  margin: 0;
+  width: 100%;
+}
+
+.reveal pre.news {
+  font-size: 0.16em;
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+
+  -webkit-transition: all 1.1s ease;
+  -moz-transition: all 1.1s ease;
+  -ms-transition: all 1.1s ease;
+  -o-transition: all 1.1s ease;
+  transition: all 1.1s ease;
+}
+
+.reveal pre.news-big-big {
+  box-shadow: none;
+  display: none;
+  font-size: 0.16em;
+  font-weight: bold;
+  margin: 0;
+  position: absolute;
+}
+
+/* override reveal.js while using night theme */
+.reveal .slides section >pre,
+.reveal .slides section :not(.code) pre,
+.reveal .slides section >.code {
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+.reveal .slides section.no-shadow pre,
+.reveal .slides section.no-shadow .code {
+  box-shadow: none;
+}
+
+/*overriding reveal.js */
+.reveal section img {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  position: absolute;
+  -webkit-transition: all 0.7s ease;
+  -moz-transition: all 0.7s ease;
+  -ms-transition: all 0.7s ease;
+  -o-transition: all 0.7s ease;
+  transition: all 0.7s ease;
+}
+
+.reveal div.slides section .pause-0-3 {
+  -webkit-transition-delay: 0.3s;
+  transition-delay: 0.3s;
+}
+
+.reveal footer {
+  font-size: 0.7em;
+  text-align: right;
+}
+
+/* only needed for 1024x768 */
+#ex1 code {
+  font-size: 0.94em;
+  line-height: 1.19em;
+}
+
+/* only needed for 1024x768 */
+#ex2 >pre code {
+  font-size: 0.94em;
+}
+
+#ex3 >div {
+  font-size: 0.94em;
+}
+
+.reveal .hi {
+  display: inline-block;
+  -webkit-transition: all 0.4s ease;
+  -moz-transition: all 0.4s ease;
+  -ms-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+
+.reveal .hi.light {
+  background-color: #000000;
+  border: solid 1px #999900;
+  border-radius: 5px;
+  margin: 2px 0;
+  padding: 2px 3px 2px 1px;
+  color: yellow;
+  -webkit-transition-delay: 0.2s;
+  transition-delay: 0.2s;
+}
+
+.reveal .hi.light.red {
+  background-color: #220000;
+  border: solid 1px #FF0000;
+  color: #FF0000;
+}
+
+.reveal .half {
+  width: 49%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.reveal .left.half {
+  text-align: right;
+}
+
+.reveal .right.half {
+  text-align: left;
+}

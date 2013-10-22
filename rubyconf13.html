@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>ObjectSpace.trace_object_allocations</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css" disabled="true">
+    <link rel="stylesheet" href="lib/css/tomorrow-night-bright.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="reveal">
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+<section data-state="default">
+  <h1>Ruby 2.1</h1>
+  <h2>Tracing Object Allocations</h2>
+  <p>
+    <small>Sam Rawlins / <a href="https://www.github.com/srawlins">@srawlins</a></small>
+  </p>
+</section>
+
+<section data-state="default" class="no-shadow">
+  <h2>Ruby 2.1-preview1 is out!</h2>
+  <pre class="news">
+= NEWS for Ruby 2.1.0
+
+This document is a list of user visible feature changes made between
+releases except for bug fixes.
+
+Note that each entry is kept so brief that no reason behind or
+reference information is supplied with.  For a full list of changes
+with all sufficient information, see the ChangeLog file.
+
+== Changes since the 2.0.0 release
+
+=== Language changes
+
+* Now the default values of keyword arguments can be omitted.  Those
+  "required keyword arguments" need giving explicitly at the call time.
+
+* Added suffixes for integer and float literals: 'r', 'i', and 'ri'.
+  * "42r" and "3.14r" are evaluated as Rational(42, 1) and 3.14.rationalize,
+    respectively.  But exponential form with 'r' suffix like "6.022e+23r" is
+    not accepted because it is misleading.
+  * "42i" and "3.14i" are evaluated as Complex(0, 42) and Complex(0, 3.14),
+    respectively.
+  * "42ri" and "3.14ri" are evaluated as Complex(0, 42r) and Complex(0, 3.14r),
+    respectively.
+
+* def-expr now returns the symbol of its name instead of nil.
+
+* Added 'f' suffix for string literals that returns a frozen String object.
+
+=== Core classes updates (outstanding ones only)
+
+* Binding
+  * New methods
+    * Binding#local_variable_get(symbol)
+    * Binding#local_variable_set(symbol, obj)
+    * Binding#local_variable_defined?(symbol)
+
+* GC
+  * added environment variable:
+    * RUBY_HEAP_SLOTS_GROWTH_FACTOR: growth rate of the heap.
+
+* Integer
+  * New methods
+    * Fixnum#bit_length
+    * Bignum#bit_length
+  * Bignum performance improvement
+    * Use GMP if available.
+      GMP is used only for several operations:
+      multiplication, division, radix conversion, GCD
+
+* IO
+  * extended methods:
+    * IO#seek supports SEEK_DATA and SEEK_HOLE as whence.
+    * IO#seek accepts symbols (:CUR, :END, :SET, :DATA, :HOLE) for 2nd argument.
+    * IO#read_nonblock accepts optional `exception: false` to return symbols
+    * IO#write_nonblock accepts optional `exception: false` to return symbols
+
+* Kernel
+  * New methods:
+    * Kernel#singleton_method
+
+* Module
+  * New methods:
+    * Module#using, which activates refinements of the specified module only
+      in the current class or module definition.
+    * Module#singleton_class? returns true if the receiver is a singleton class
+      or false if it is an ordinary class or module.
+  * extended methods:
+    * Module#refine is no longer experimental.
+    * Module#include and Module#prepend are now public methods.
+
+* Mutex
+  * misc
+    * Mutex#owned? is no longer experimental.
+
+* Numeric
+  * extended methods:
+    * Numeric#step allows the limit argument to be omitted, in which
+      case an infinite sequence of numbers is generated.  Keyword
+      arguments `to` and `by` are introduced for ease of use.
+
+* Process
+  * New methods:
+    * alternative methods to $0/$0=:
+      * Process.argv0() returns the original value of $0.
+      * Process.setproctitle() sets the process title without affecting $0.
+    * Process.clock_gettime
+    * Process.clock_getres
+
+* RbConfig
+  * New constants:
+    * RbConfig::SIZEOF is added to provide the size of C types.
+
+* String
+  * New methods:
+    * String#scrub and String#scrub! verify and fix invalid byte sequence.
+  * extended methods:
+    * If invalid: :replace is specified for String#encode, replace
+      invalid byte sequence even if the destination encoding equals to
+      the source encoding.
+
+* Symbol
+  * All symbols are now frozen.
+
+* pack/unpack (Array/String)
+  * Q! and q! directives for long long type if platform has the type.
+
+* toplevel
+  * extended methods:
+    * main.using is no longer experimental. The method activates refinements
+      in the ancestors of the argument module to support refinement
+      inheritance by Module#include.
+
+=== Core classes compatibility issues (excluding feature bug fixes)
+
+* IO
+  * incompatible changes:
+    * open ignore internal encoding if external encoding is ASCII-8BIT.
+
+* Kernel#eval, Kernel#instance_eval, and Module#module_eval.
+  * Copies the scope information of the original environment, which means
+    that private, protected, public, and module_function without arguments
+    do not affect the environment outside the eval string.
+    For example, `class Foo; eval "private"; def foo; end; end' doesn't make
+    Foo#foo private.
+
+* Kernel#untrusted?, untrust, and trust
+  * These methods are deprecated and their behavior is same as tainted?,
+    taint, and untaint, respectively.  If $VERBOSE is true, they show warnings.
+
+* Module#ancestors
+  * The ancestors of a singleton class now include singleton classes,
+    in particular itself.
+
+* Module#define_method and Object#define_singleton_method
+  * Now they return the symbols of the defined methods, not the methods/procs
+    themselves.
+
+* Numeric#quo
+  * Raises TypeError instead of ArgumentError if the receiver doesn't have
+    to_r method.
+
+* Proc
+  * Returning from lambda proc now always exits from the Proc, not from the
+    method where the lambda is created.  Returing from non-lambda proc exits
+    from the method, same as the former behavior.
+
+
+=== Stdlib updates (outstanding ones only)
+
+* CGI::Util
+  * All class methods modulized.
+
+* Digest
+  * extended methods:
+    * Digest::Class.file takes optional arguments for its constructor
+
+* Matrix
+  * Added Vector#cross_product.
+
+* Net::SMTP
+  * Added Net::SMTP#rset to implement the RSET command
+
+* Pathname
+  * New methods:
+    * Pathname#write
+    * Pathname#binwrite
+
+* OpenSSL::BN
+  * extended methods:
+    * OpenSSL::BN.new allows Fixnum/Bignum argument.
+
+* open-uri
+  * Support multiple fields with same field name (like Set-Cookie).
+
+* RDoc
+  * Updated to 4.1.0.preview.1.  Major enhancements include a modified default
+    template and accessibility enhancements.
+
+    For a list of minor enhancements and bug fixes see:
+    https://github.com/rdoc/rdoc/blob/v4.1.0.preview.1/History.rdoc
+
+* Resolv
+  * New methods:
+    * Resolv::DNS.fetch_resource
+  * One-shot multicast DNS support
+  * Support LOC resources
+
+* REXML::Parsers::SAX2Parser
+  * Fixes wrong number of arguments of entitydecl event. Document of the event
+    says "an array of the entity declaration" but implemenation passes two
+    or more arguments. It is an implementation bug but it breaks backword
+    compatibility.
+
+* REXML::Parsers::StreamParser
+  * Supports "entity" event.
+
+* REXML::Text
+  * REXML::Text#<< supports method chain like 'text << "XXX" << "YYY"'.
+  * REXML::Text#<< supports not "raw" mode.
+
+* Rinda::RingServer, Rinda::RingFinger
+  * Rinda now supports multicast sockets.  See Rinda::RingServer and
+    Rinda::RingFinger for details.
+
+* RubyGems
+  * Updated to 2.2.0.preview.1  For a list of enhancements and bug fixes see:
+    https://github.com/rubygems/rubygems/blob/v2.2.0.preview.1/History.txt
+
+* Set
+  * New methods:
+    * Set#intersect?
+    * Set#disjoint?
+
+* Socket
+  * New methods:
+    * Socket.getifaddrs
+
+* StringScanner
+  * extended methods:
+    * StringScanner#[] supports named captures.
+
+* Syslog::Logger
+  * Added facility.
+
+* Tempfile
+  * New methods:
+    * Tempfile.create
+
+
+* WEBrick
+  * The body of a response may now be a StringIO or other IO-like that responds
+    to #readpartial and #read.
+
+* XMLRPC::Client
+  * New methods:
+    * XMLRPC::Client#http. It returns Net::HTTP for the client. Normally,
+      it is not needed. It is useful when you want to change minor HTTP client
+      options. You can change major HTTP client options by XMLRPC::Client
+      methods. You should use XMLRPC::Client methods for changing major
+      HTTP client options instead of XMLRPC::Client#http.
+
+
+=== Stdlib compatibility issues (excluding feature bug fixes)
+
+<span id="objspace-in-news">* objspace
+  * new method:
+    * ObjectSpace.trace_object_allocations
+    * ObjectSpace.trace_object_allocations_start
+    * ObjectSpace.trace_object_allocations_stop
+    * ObjectSpace.trace_object_allocations_clear
+    * ObjectSpace.allocation_sourcefile
+    * ObjectSpace.allocation_sourceline
+    * ObjectSpace.allocation_class_path
+    * ObjectSpace.allocation_method_id
+    * ObjectSpace.allocation_generation</span>
+
+* Set
+  * incompatible changes:
+    * Set#to_set now returns self instead of generating a copy.
+
+* URI
+  * incompatible changes:
+    * URI.decode_www_form follows current WHATWG URL Standard.
+      It gets encoding argument to specify the character encoding.
+      It now allows loose percent encoded strings, but denies ;-separator.
+    * URI.encode_www_form follows current WHATWG URL Standard.
+      It gets encoding argument to convert before percent encode.
+      UTF-16 strings aren't converted to UTF-8 before percent encode by default.
+
+
+=== Built-in global variables compatibility issues
+
+* $SAFE
+  * $SAFE=4 is obsolete.  If $SAFE is set to 4 or larger, an ArgumentError
+    is raised.
+  </pre>
+  <pre class="news-big-big fragment slow" id="objspace-big-big">* objspace
+  * new method:
+    * ObjectSpace.trace_object_allocations
+    * ObjectSpace.trace_object_allocations_start
+    * ObjectSpace.trace_object_allocations_stop
+    * ObjectSpace.trace_object_allocations_clear
+    * ObjectSpace.allocation_sourcefile
+    * ObjectSpace.allocation_sourceline
+    * ObjectSpace.allocation_class_path
+    * ObjectSpace.allocation_method_id
+    * ObjectSpace.allocation_generation
+    </pre>
+</section>
+
+<section data-markdown data-state="default">
+  <script type="text/template">
+    ## ObjectSpace is not new
+
+    Mostly known for
+
+    * `ObjectSpace.count_objects`
+    * `ObjectSpace.each_object`
+    * `ObjectSpace.garbage_collect`
+
+    <footer>
+      [\[rubydoc.info\]](http://rubydoc.info/stdlib/core/ObjectSpace)
+    </footer>
+  </script>
+</section>
+
+<section data-state="default">
+  <h3>ObjectSpace.new_in_ruby_2_1</h3>
+
+  <ul>
+    <li><code>ObjectSpace.trace_object_allocations</code></li>
+    <li><code>ObjectSpace.trace_object_allocations_start</code><sup>*</sup></li>
+    <li><code>ObjectSpace.trace_object_allocations_stop</code><sup>*</sup></li>
+    <li><code>ObjectSpace.trace_object_allocations_clear</code><sup>*</sup></li>
+  </ul>
+
+  <p style="text-align: right; margin-top: 1em;">
+    <sup>*</sup>
+    <a href="https://github.com/ruby/ruby/commit/1450e0b5ac0a49aa1f0d1db521b293b18f6fa99c">2.1.0-preview2</a>
+  </p>
+</section>
+
+<section id="ex1" data-state="default">
+  <h1>An Example</h1>
+
+  <pre class="fragment" id="ex1-1"><code class="ruby" data-trim>
+# example.rb
+
+1  class MyClass
+2    def an_array
+3      return [2,3,5,7,11,13,17,19,23,29,31]
+4    end
+
+5    def a_string
+6      return "a String"
+7    end
+8  end
+    </code></pre>
+
+    <div class="fragment-parent">
+    <pre class="fragment slower" id="ex1-2" style="position: absolute"><code class="ruby" data-trim>
+require 'objspace'
+
+a = s = nil
+
+ObjectSpace.trace_object_allocations do
+  a = MyClass.new.an_array
+  s = MyClass.new.a_string
+end
+
+ObjectSpace.allocation_sourcefile(a) #=> "example.rb"
+ObjectSpace.allocation_sourceline(a) #=> 3
+ObjectSpace.allocation_class_path(a) #=> "MyClass"
+ObjectSpace.allocation_method_id(a)  #=> "an_array"
+
+ObjectSpace.allocation_sourcefile(s) #=> "example.rb"
+ObjectSpace.allocation_sourceline(s) #=> 6
+ObjectSpace.allocation_class_path(s) #=> "MyClass"
+ObjectSpace.allocation_method_id(s)  #=> "a_string"
+    </code></pre>
+
+    <pre class="fragment slow" id="ex1-3"><code class="ruby" data-trim>
+require 'objspace'
+
+
+
+ObjectSpace.trace_object_allocations_start
+a = MyClass.new.an_array
+s = MyClass.new.a_string
+ObjectSpace.trace_object_allocations_stop
+
+ObjectSpace.allocation_sourcefile(a) #=> "example.rb"
+ObjectSpace.allocation_sourceline(a) #=> 3
+ObjectSpace.allocation_class_path(a) #=> "MyClass"
+ObjectSpace.allocation_method_id(a)  #=> "an_array"
+
+ObjectSpace.allocation_sourcefile(s) #=> "example.rb"
+ObjectSpace.allocation_sourceline(s) #=> 6
+ObjectSpace.allocation_class_path(s) #=> "MyClass"
+ObjectSpace.allocation_method_id(s)  #=> "a_string"
+    </code></pre>
+    </div>
+</section>
+
+<section data-state="default">
+  <h3>ObjectSpace.trace_object_allocations</h3>
+  <h2>is</h2>
+  <h1>
+    <span class="fragment slow fade-out" data-fragment-index="1" style="position: absolute;">Limited</span>
+    <span class="fragment slow fade-in" data-fragment-index="1" style="position: absolute;">
+      <span class="fragment slow fade-out" data-fragment-index="2">Fine-Grained</span>
+    </span>
+  <span class="fragment slow fade-in" data-fragment-index="2">Just the Start</span>
+  </h1>
+</section>
+
+<section data-state="teal-bg">
+  <h2>The Next Step:</h2>
+  <h1>Aggregation</h1>
+</section>
+
+<section data-state="teal-bg">
+  <h1>AllocationStats</h1>
+</section>
+
+<section data-state="teal-bg" id="ex2" class="hilights">
+  <h2>Low-level Example</h2>
+
+  <div class="code">
+    <pre><code class="ruby" data-noescape> 1  class MyClass
+ 2    def my_method
+<div data-hilight-idx="2" class="hi"> 3      @hash = {2 => "foo", 3 => "bar", 5 => "baz"}</div>
+<div data-hilight-idx="1" class="hi"> 4      @string = "quux"</div>
+ 5    end
+ 6  end</code></pre>
+
+    <pre><code class="fragment ruby" data-noescape> 7
+ 8  require "allocation_stats"
+ 9
+10  stats = AllocationStats.new do
+<div data-hilight-idx="3" class="hi">11    MyClass.new.my_method</div>
+12  end</code></pre>
+
+    <pre><code class="fragment ruby">13
+14  puts stats.allocations.to_text</code></pre>
+  </div>
+
+  <pre class="fragment"><code class="no-highlight" data-noescape>           sourcefile             sourceline  class_path  method_id   class
+--------------------------------  ----------  ----------  ---------  -------
+<div data-hilight-idx="1" class="hi">./examples/trace_my_class_raw.rb           4  MyClass     my_method  String</div>
+<div data-hilight-idx="2" class="hi">./examples/trace_my_class_raw.rb           3  MyClass     my_method  Hash
+./examples/trace_my_class_raw.rb           3  MyClass     my_method  String
+./examples/trace_my_class_raw.rb           3  MyClass     my_method  String
+./examples/trace_my_class_raw.rb           3  MyClass     my_method  String</div>
+<div data-hilight-idx="3" class="hi">./examples/trace_my_class_raw.rb          11  Class       new        MyClass</div>
+</code></pre>
+
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="3" style="display: none;"></span>
+</section>
+
+<section data-state="teal-bg" id="ex3" class="hilights">
+  <h2>group_by Example</h2>
+
+  <div class="code">
+    <pre><code class="ruby" data-noescape> 1  class MyClass
+ 2    def my_method
+<div data-hilight-idx="1" class="hi"> 3      @hash = {2 => "foo", 3 => "bar", 5 => "baz"}</div>
+ 4      @string = "quux"
+ 5    end
+ 6  end</code></pre>
+
+    <pre class="fragment"><code class="ruby" data-noescape> 7
+ 8  require "allocation_stats"
+ 9
+10  stats = AllocationStats.new do
+11    MyClass.new.my_method
+12  end</pre></code>
+
+    <pre class="fragment"><code class="ruby" data-noescape>13  puts stats.allocations.group_by(:sourcefile, :sourceline, :class).to_text</code></pre>
+  </div>
+
+  <pre class="fragment"><code class="no-highlight" data-noescape>             sourcefile                sourceline   class   count
+-------------------------------------  ----------  -------  -----
+./examples/trace_my_class_group_by.rb           4  String       1
+./examples/trace_my_class_group_by.rb           3  Hash         1
+<div data-hilight-idx="1" class="hi">./examples/trace_my_class_group_by.rb           3  String       3</div>
+./examples/trace_my_class_group_by.rb          11  MyClass      1</code></pre>
+
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+</section>
+
+<section data-state="teal-bg">
+  <h2>Psych</h2>
+
+  <pre><code class="ruby" data-noescape>require "yaml"
+require "allocation_stats"
+
+stats = AllocationStats.new do
+  # lots of objects from Rbconfig::CONFIG["rubylibdir"]
+  y = YAML.dump(["one string", "two string"])
+end
+
+puts stats.allocations(alias_paths: true).group_by(:sourcefile, :class).to_text</code></pre>
+
+  <pre class="fragment"><code class="no-highlight" data-noescape style="font-size: 0.85em;">               sourcefile                                class                  count
+----------------------------------------  ------------------------------------  -----
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    String                                   38
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    MatchData                                 5
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    Regexp                                    1
+&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Psych::Emitter                            1
+&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Array                                     2
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          Psych::Visitors::Emitter                  1
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          StringIO                                  1
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          String                                    3
+&lt;RUBYLIBDIR&gt;/psych/tree_builder.rb        Psych::Nodes::Scalar                      2
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb  Array                                    12
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb  Method                                    5
+&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      String                                    5
+&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      MatchData                                 2
+...</code></pre>
+</section>
+
+<section data-state="teal-bg">
+  <h2>Psych - sorted</h2>
+
+  <pre><code class="ruby" data-noescape>require "yaml"
+require "allocation_stats"
+
+stats = AllocationStats.new do
+  # lots of objects from Rbconfig::CONFIG["rubylibdir"]
+  y = YAML.dump(["one string", "two string"])
+end
+
+puts stats.allocations(alias_paths: true).
+  group_by(:sourcefile, :class).
+  sort_by_count.
+  to_text</code></pre>
+
+  <pre class="fragment"><code class="no-highlight" data-noescape style="font-size: 0.85em;">               sourcefile                                class                  count
+-----------------------------------------  ------------------------------------  -----
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     String                                   38
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   String                                   21
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Array                                    12
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Method                                    5
+&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb       String                                    5
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     MatchData                                 5
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Hash                                      3
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb           String                                    3
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb           Array                                     3
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   MatchData                                 3
+&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb     String                                    3
+...</code></pre>
+</section>
+
+<section id="ex4" data-state="teal-bg" class="hilights">
+  <h2>class_plus</h2>
+
+  <pre id="ex4-1" class="fragment-parent"><code class="ruby" data-noescape>require 'hike'
+require 'allocation_stats'
+
+stats = AllocationStats.new.trace do
+  path = $:.detect { |p| p =~ /hike/ }
+  path = File.dirname(path)
+
+  trail = Hike::Trail.new path
+  trail.append_extension ".rb"
+  trail.append_paths "lib"
+
+  trail.find("hike")
+end
+
+puts stats.allocations(alias_paths: true)
+          .group_by(<div data-hilight-idx="1" class="hi">:sourcefile, :class_plus</div>)
+          .sort_by_count
+          .to_text</code></pre>
+
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+
+  <pre class="fragment" id="ex4-2" style="font-size: 0.47em;"><code class="no-highlight" data-noescape>                   sourcefile                                 class_plus              count
+-------------------------------------------------  ---------------------------------  -----
+<div data-hilight-idx="3" class="hi red">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   String                               438</div>
+&lt;RUBYLIBDIR&gt;/pathname.rb                           String                               152
+<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Fixnum,FalseClass&gt;             134</div>
+&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   RubyVM::InstructionSequence          105</div>
+examples/hike_hike.rb                              String                                81
+<div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/pathname.rb                           Array&lt;String&gt;                         67</div>
+&lt;RUBYLIBDIR&gt;/pathname.rb                           String                                67
+<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Array&gt;                          58</div>
+&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array                                 47
+&lt;RUBYLIBDIR&gt;/rubygems.rb                           String                                27</div>
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                                21
+<div data-hilight-idx="3" class="hi red">examples/hike_hike.rb                              RubyVM::InstructionSequence           20</div>
+&lt;RUBYLIBDIR&gt;/pathname.rb                           String                                20
+examples/hike_hike.rb                              Array                                 16
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                                15
+...</code></pre>
+
+  <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="3" style="display: none;"></span>
+</section>
+
+<section data-state="teal-bg" class="hilights">
+  <h2>burn</h2>
+
+  <pre id="ex5-1" class="fragment-parent"><code class="ruby" data-noescape>require 'hike'
+require 'allocation_stats'
+
+stats = AllocationStats.new(<div data-hilight-idx="1" class="hi">burn: 1</div>).trace do
+  path = $:.detect { |p| p =~ /hike/ }
+  path = File.dirname(path)
+
+  trail = Hike::Trail.new path
+  trail.append_extension ".rb"
+  trail.append_paths "lib"
+
+  trail.find("hike")
+end
+
+puts stats.allocations(alias_paths: true)
+          .group_by(:sourcefile, :class_plus)
+          .sort_by_count
+          .to_text</code></pre>
+
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+
+  <pre class="fragment" id="ex5-2" style="font-size: 0.47em;"><code class="no-highlight" data-noescape>                     sourcefile                          class_plus     count
+-----------------------------------------------------  ---------------  -----
+&lt;RUBYLIBDIR&gt;/pathname.rb                               String             287
+&lt;RUBYLIBDIR&gt;/pathname.rb                               Array&lt;String&gt;       73
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb             String              73
+&lt;RUBYLIBDIR&gt;/pathname.rb                               MatchData           13
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb             Pathname            12
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb             Array&lt;Pathname&gt;     11
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/paths.rb             String               7
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb             Array&lt;String&gt;        6
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb             MatchData            6
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/trail.rb             String               6
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/trail.rb             Array&lt;String&gt;        5
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb             Hash                 5
+...</code></pre>
+</section>
+
+<section data-state="blue-bg">
+  <h2><em style="font-size: 1.45em;">Rack</em> AllocationStats</h2>
+</section>
+
+<section data-state="blue-bg">
+  <h2>Rack Middleware</h2>
+  <div class="left half">http://my.rack.app:9292</div>
+  <div class="right half">/path<br />?foo=bar<br />&amp;<em>ras[trace]=true</em></p>
+</section>
+
+<section data-state="blue-bg">
+  <h2>Rack Middleware</h2>
+  <div style="position: relative;">
+    <img src="img/ras_01.png" id="ex6-1" />
+    <img src="img/ras_trace_01.png" class="fragment" id="ex6-2" style="position: relative;" />
+    </div>
+</section>
+
+<section data-state="blue-bg" class="no-shadow">
+  <h2>?ras[help]</h2>
+
+  <pre>Rack AllocationStats help
+
+Append ras[trace]=true to your URL to trace all object allocations during the
+request. The server will respond with statistics on the allocations, instead of
+the application's response.
+
+Options
+
+ras[times]=COUNT
+    send the request to the application COUNT times, to reduce statistics from
+    initial allocations that don't happen on repeat requests.
+
+ras[help]
+    immediately respond with this help text
+
+ras[scope]=SCOPE
+    limits the list of allocations in the response to those whose `sourcefile`
+    matches SCOPE. `ras[scope]='.'` is a special case which is expanded to be
+    the current working directory.
+
+...</pre>
+</section>
+
+<section data-state="blue-bg">
+  <h2>?ras[times]=10</h2>
+</section>
+
+<section data-state="blue-bg">
+  <h2>?ras[alias_paths]=true</h2>
+</section>
+
+<section data-state="wip">
+  <h2>?ras[output]=json</h2>
+</section>
+
+<section data-state="wip">
+  <h2>?ras[output]=interactive</h2>
+</section>
+
+<section data-state="wip">
+  <h2>Simple Sinatra App</h2>
+  <h1>w/ Haml</h1>
+</section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+    <script src="js/jquery-2.0.3.min.js"></script>
+
+    <script>
+
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+  controls: true,
+  progress: true,
+  history: true,
+  center: true,
+
+  theme: 'night' || Reveal.getQueryHash().theme, // available themes are in /css/theme
+  transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+  ]
+});
+
+Reveal.addEventListener('default', function() {
+  $("body").delay(650);
+  $.queue($("body")[0], "fx", function() {
+    $(this).css({ backgroundColor: '' });
+    jQuery.dequeue(this);
+  });
+}, false );
+
+Reveal.addEventListener('teal-bg', function() {
+  $("body").delay(650);
+  $.queue($("body")[0], "fx", function() {
+    $(this).css({ backgroundColor: 'teal' });
+    jQuery.dequeue(this);
+  });
+}, false );
+
+Reveal.addEventListener('blue-bg', function() {
+  $("body").delay(650);
+  $.queue($("body")[0], "fx", function() {
+    $(this).css({ backgroundColor: '#330066' });
+    jQuery.dequeue(this);
+  });
+}, false );
+
+Reveal.addEventListener( 'fragmentshown', function(event) {
+  var fragment = $(event.fragment);
+
+  if (fragment.parents('#ex1').length > 0) {
+    if (fragment.attr('id') == 'ex1-2') { show_ex1_2(); }
+    if (fragment.attr('id') == 'ex1-3') { show_ex1_3(); }
+  }
+
+  if (fragment.attr('id') == 'objspace-big-big') { show_big_big(); }
+
+  if (fragment.parents('.hilights').length > 0 && fragment.data('hilight-idx')) {
+    hilight(fragment);
+  }
+
+  if (fragment.attr('id') == 'ex4-2') { show_ex4_2(); }
+  if (fragment.attr('id') == 'ex5-2') { show_ex5_2(); }
+  if (fragment.attr('id') == 'ex6-2') { show_ex6_2(); }
+} );
+
+Reveal.addEventListener( 'fragmenthidden', function(event) {
+  var fragment = $(event.fragment);
+
+  if (fragment.parents('#ex1').length > 0) {
+    if (fragment.attr('id') == 'ex1-2') { hide_ex1_2(); }
+    if (fragment.attr('id') == 'ex1-3') { hide_ex1_3(); }
+  }
+
+  if (fragment.attr('id') == 'objspace-big-big') { hide_big_big(); }
+
+  if (fragment.parents('.hilights').length > 0 && fragment.data('hilight-idx')) {
+    lolight(fragment);
+  }
+
+  if (fragment.attr('id') == 'ex4-2') { hide_ex4_2(); }
+  if (fragment.attr('id') == 'ex5-2') { hide_ex5_2(); }
+  if (fragment.attr('id') == 'ex6-2') { hide_ex6_2(); }
+} );
+
+function show_ex1_2() {
+  $('#ex1-1').css({ left: '-6em', opacity: 0.6 });
+  $('#ex1-2').parent().css({ top: '-3.6em', left: '3em' });
+}
+
+function hide_ex1_2() {
+  $('#ex1-1').css({ left: '', opacity: '' });
+  $('#ex1-2').css({ top: '', left: '' });
+}
+
+function show_ex1_3() { $('#ex1-2').css({ opacity: 0 }); }
+function hide_ex1_3() { $('#ex1-2').css({ opacity: '' }); }
+
+function show_ex4_2() {
+  $('#ex4-1').css({ left: '-6em', opacity: 0.6 });
+  $('#ex4-2').css({ top: '-17em', left: '3em' });
+}
+
+function hide_ex4_2() {
+  $('#ex4-1').css({ left: '', opacity: '' });
+  $('#ex4-2').css({ top: '', left: '' });
+}
+
+function show_ex5_2() {
+  $('#ex5-1').css({ left: '-6em', opacity: 0.6 });
+  $('#ex5-2').css({ top: '-17em', left: '3em' });
+}
+
+function hide_ex5_2() {
+  $('#ex5-1').css({ left: '', opacity: '' });
+  $('#ex5-2').css({ top: '', left: '' });
+}
+
+function show_ex6_2() {
+  $('#ex6-1').removeClass("pause-0-3").css({ top: '-1.6em', left: '-2.6em', opacity: 0.7 });
+  $('#ex6-2').addClass("pause-0-3").css({ top: '0.6em', left: '2em' });
+}
+
+function hide_ex6_2() {
+  $('#ex6-1').addClass("pause-0-3").css({ top: '', left: '', opacity: '' });
+  $('#ex6-2').removeClass("pause-0-3").css({ top: '', left: '' });
+}
+
+function show_big_big() {
+  var objspaceInNews = $('#objspace-in-news'),
+      objspaceBigBig = $('#objspace-big-big'),
+      newsPre = objspaceInNews.parent(),
+      newsMarginLeft = (newsPre.outerWidth(true) - newsPre.width()) / 2,
+      newsMarginTop = (newsPre.outerHeight(true) - newsPre.height()) / 2,
+      newsCenter = newsMarginLeft + newsPre.width() / 2,
+      newsMiddle = newsMarginTop + newsPre.position().top + newsPre.height() / 2;
+
+  objspaceBigBig.css('left',
+    objspaceInNews.position().left + newsMarginLeft);
+  objspaceBigBig.css('top',
+    objspaceInNews.position().top + newsPre.position().top + newsMarginTop);
+
+  objspaceBigBig.show();
+  newsPre.css('opacity', 0.3);
+
+  objspaceBigBig.css({
+    left: newsCenter - objspaceInNews.width()/2,
+    top: newsMiddle - objspaceInNews.height()/2
+  });
+
+  objspaceBigBig.delay(750);
+
+  $.queue(objspaceBigBig[0], "fx", function() {
+    $(this).css({
+      fontSize: '0.80em',
+      lineHeight: '1.5em',
+      left: newsMarginLeft,
+      top: newsPre.position().top,
+    });
+    jQuery.dequeue(this);
+  });
+}
+
+function hide_big_big() {
+  var objspaceInNews = $('#objspace-in-news'),
+      objspaceBigBig = $('#objspace-big-big'),
+      newsPre = objspaceInNews.parent();
+
+  newsPre.css('opacity', 1.0);
+
+  objspaceBigBig.delay(750);
+
+  $.queue(objspaceBigBig[0], "fx", function() {
+    $(this).hide();
+    $(this).css({
+      fontSize: '',
+      lineHeight: '',
+      left: '',
+      top: ''
+    });
+    jQuery.dequeue(this);
+  });
+}
+
+function hilight(el) {
+  var idx = el.data('hilight-idx');
+  el.parents(".hilights").find("div[data-hilight-idx]").removeClass("light");
+  el.parents(".hilights").find("div[data-hilight-idx='" + idx + "']").addClass("light");
+}
+
+function lolight(el) {
+  var idx = el.data('hilight-idx');
+  el.parents(".hilights").find("div[data-hilight-idx]").removeClass("light");
+  el.parents(".hilights").find("div[data-hilight-idx='" + (idx-1) + "']").addClass("light");
+}
+    </script>
+
+  </body>
+</html>

@@ -25,11 +25,11 @@ div.reveal {
 }
 
 .blue-bg .backgrounds .present {
-  background-color: #330066;
+  background-color: #002147;
 }
 
 .wip .backgrounds .present {
-  background-color: red;
+  background-color: #AB0520;
 }
 
 /*
@@ -124,12 +124,19 @@ pre code {
   background: none;
   border: 0;
   box-shadow: none;
-  position: absolute;
+  max-width: 92%; /* i dont like images getting close to my nav arrows */
+  position: relative;
   -webkit-transition: all 0.7s ease;
   -moz-transition: all 0.7s ease;
   -ms-transition: all 0.7s ease;
   -o-transition: all 0.7s ease;
   transition: all 0.7s ease;
+}
+
+.zoomed .reveal section img {
+  margin: 5px 0;
+  max-width: 99%;
+  max-height: 99%;
 }
 
 .reveal div.slides section .pause-0-3 {

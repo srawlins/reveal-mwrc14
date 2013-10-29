@@ -692,10 +692,11 @@ puts stats.allocations(alias_paths: true)
   <h2>Rack Middleware</h2>
   <div style="position: relative;">
     <img src="img/ras_01.png"
+         style="position: absolute;"
          data-nm8-css="{ 'top': '-1.6em', 'left': '-2.6em', 'opacity': 0.7 }"
          data-nm8-class="pause-0-3" />
     <img src="img/ras_trace_01.png"
-         class="fragment" style="position: relative;"
+         class="fragment"
          data-nm8-css="{ 'top': '0.6em', 'left': '2em' }"
          data-nm8-class="pause-0-3" />
     </div>
@@ -774,18 +775,63 @@ ras[scope]=SCOPE
 
   <section>
     <h3>?ras[output]=interactive</h3>
-    <img src="img/ras-interactive-01.png" style="position: relative;" />
+    <img src="img/ras-interactive-01.png" />
   </section>
 
   <section>
     <h3>?ras[output]=interactive</h3>
-    <img src="img/ras-interactive-02.png" style="position: relative;" />
+    <img src="img/ras-interactive-02.png" />
+  </section>
+</section>
+
+<section data-state="blue-bg">
+  <section>
+    <h2>Simple Sinatra App</h2>
+    <img src="img/ras-sinatra.png" />
+  </section>
+
+  <section>
+    <h3>Sinatra App w/ /haml</h3>
+    <img src="img/ras-sinatra-haml.png" />
+  </section>
+
+  <section>
+    <h3>Sinatra App w/ /slim</h3>
+    <img src="img/ras-sinatra-slim.png" />
+  </section>
+</section>
+
+<section data-state="blue-bg">
+  <section>
+    <h1>Rails 3.2.15</h1>
+  </section>
+
+  <section>
+    <h3>Rails 3.2.15</h3>
+    <img src="img/ras-rails-3.2.15-01.png" />
+  </section>
+
+  <section>
+    <h3>Rails 3.2.15</h3>
+    <img src="img/ras-rails-3.2.15-02.png" />
   </section>
 </section>
 
 <section data-state="wip">
-  <h2>Simple Sinatra App</h2>
-  <h1>w/ Haml</h1>
+  <h3>active_support/callbacks.rb:81,:414</h3>
+</section>
+
+<section data-state="wip">
+  <h3>active_record/relation.rb:26,:27</h3>
+</section>
+
+<section data-state="wip">
+  <h2>active_support/core_ext/</h2>
+  <h3>string/output_safety.rb:24,:184</h3>
+</section>
+
+<section data-state="wip">
+  <h3>sqlite3/statement.rb:108</h3>
 </section>
       </div>
     </div>
@@ -837,7 +883,7 @@ Reveal.addEventListener('teal-bg', function() {
 Reveal.addEventListener('blue-bg', function() {
   $("body").delay(650);
   $.queue($("body")[0], "fx", function() {
-    $(this).css({ backgroundColor: '#330066' });
+    $(this).css({ backgroundColor: '#002147' });
     jQuery.dequeue(this);
   });
 }, false );

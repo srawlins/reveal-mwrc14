@@ -583,7 +583,9 @@ puts stats.allocations(alias_paths: true).
 <section data-state="teal-bg" class="hilights">
   <h2>class_plus</h2>
 
-  <pre class="fragment-parent" data-nm8-css="{ 'left': '-6em', 'opacity': 0.6 }"><code class="ruby" data-noescape>require 'hike'
+  <pre class="fragment-parent"
+       data-nm8-css="{ 'left': '-6em', 'opacity': 0.6 }"
+       ><code class="ruby" data-noescape>require 'hike'
 require 'allocation_stats'
 
 stats = AllocationStats.new.trace do
@@ -604,7 +606,10 @@ puts stats.allocations(alias_paths: true)
 
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
-  <pre class="fragment" style="font-size: 0.47em;" data-nm8-css="{ 'top': '-17em', 'left': '3em' }"><code class="no-highlight" data-noescape>                   sourcefile                                 class_plus              count
+  <pre class="fragment"
+       style="font-size: 0.47em;"
+       data-nm8-css="{ 'top': '-17em', 'left': '3em' }"
+       ><code class="no-highlight" data-noescape>                   sourcefile                                 class_plus              count
 -------------------------------------------------  ---------------------------------  -----
 <div data-hilight-idx="3" class="hi red">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   String                               438</div>
 &lt;RUBYLIBDIR&gt;/pathname.rb                           String                               152
@@ -630,7 +635,9 @@ examples/hike_hike.rb                              Array                        
 <section data-state="teal-bg" class="hilights">
   <h2>burn</h2>
 
-  <pre class="fragment-parent" data-nm8-css="{ 'left': '-6em', 'opacity': 0.6 }"><code class="ruby" data-noescape>require 'hike'
+  <pre class="fragment-parent"
+       data-nm8-css="{ 'left': '-6em', 'opacity': 0.6 }"
+       ><code class="ruby" data-noescape>require 'hike'
 require 'allocation_stats'
 
 stats = AllocationStats.new(<div data-hilight-idx="1" class="hi">burn: 1</div>).trace do
@@ -651,7 +658,10 @@ puts stats.allocations(alias_paths: true)
 
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
-  <pre class="fragment" style="font-size: 0.47em;" data-nm8-css="{ 'top': '-17em', 'left': '3em' }"><code class="no-highlight" data-noescape>                     sourcefile                          class_plus     count
+  <pre class="fragment"
+       style="font-size: 0.47em;"
+       data-nm8-css="{ 'top': '-17em', 'left': '3em' }"
+       ><code class="no-highlight" data-noescape>                     sourcefile                          class_plus     count
 -----------------------------------------------------  ---------------  -----
 &lt;RUBYLIBDIR&gt;/pathname.rb                               String             287
 &lt;RUBYLIBDIR&gt;/pathname.rb                               Array&lt;String&gt;       73
@@ -727,9 +737,15 @@ ras[scope]=SCOPE
 
 <section data-state="blue-bg">
   <h2>?ras[output]=json</h2>
-  <pre class="fragment-parent" style="font-size: 0.48em;"  data-nm8-css="{ 'left': '-2em', 'opacity': 0.6 }"><code class="no-highlight" style="word-wrap: break-word;">[{"group_key":["/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",445,"String"],"allocations":[{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},...</code></pre>
+  <pre class="fragment-parent"
+       style="font-size: 0.48em;"
+       data-nm8-css="{ 'left': '-2em', 'opacity': 0.6 }"
+       ><code class="no-highlight" style="word-wrap: break-word;">[{"group_key":["/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",445,"String"],"allocations":[{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},...</code></pre>
 
-  <pre class="fragment" style="font-size: 0.50em;" data-nm8-css="{ 'top': '-7em', 'left': '4em' }"><code class="json">[
+  <pre class="fragment"
+       style="font-size: 0.50em;"
+       data-nm8-css="{ 'top': '-7em', 'left': '4em' }"
+       ><code class="json">[
   { "group_key": [
       "/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",
       445,
@@ -751,8 +767,20 @@ ras[scope]=SCOPE
 ]</code></pre>
 </section>
 
-<section data-state="wip">
-  <h2>?ras[output]=interactive</h2>
+<section data-state="blue-bg">
+  <section>
+    <h2>?ras[output]=interactive</h2>
+  </section>
+
+  <section>
+    <h3>?ras[output]=interactive</h3>
+    <img src="img/ras-interactive-01.png" style="position: relative;" />
+  </section>
+
+  <section>
+    <h3>?ras[output]=interactive</h3>
+    <img src="img/ras-interactive-02.png" style="position: relative;" />
+  </section>
 </section>
 
 <section data-state="wip">
@@ -829,7 +857,7 @@ Reveal.addEventListener( 'fragmentshown', function(event) {
   }
 
   if (fragment.data('nm8-css')) { nm8_show(fragment); }
-} );
+});
 
 Reveal.addEventListener( 'fragmenthidden', function(event) {
   var fragment = $(event.fragment);
@@ -846,7 +874,7 @@ Reveal.addEventListener( 'fragmenthidden', function(event) {
   }
 
   if (fragment.data('nm8-css')) { nm8_hide(fragment); }
-} );
+});
 
 function nm8_show(el) {
   var prev = el.prevAll("*[data-nm8-css]");

@@ -702,13 +702,19 @@ puts stats.allocations(alias_paths: true)
 </section>
 
 <section data-state="blue-bg">
+  <h2>Object Churn</h2>
+  <h3 class="fragment" style="margin-top: 2em;">Expensive Garbage Collection</h3>
+  <h3 class="fragment" style="margin-top: 1em;">per-Rack::Request allocations</h3>
+</section>
+
+<section data-state="blue-bg">
   <h2><em style="font-size: 1.45em;">Rack</em> AllocationStats</h2>
 </section>
 
 <section data-state="blue-bg">
   <h2>Rack Middleware</h2>
   <div class="left half">http://my.rack.app:9292</div>
-  <div class="right half">/path<br />?foo=bar<br />&amp;<em>ras[trace]=true</em></p>
+  <div class="right half">/path<br />?foo=bar<br /><span class="fragment">&amp;<em>ras[trace]=true</em></span></p>
 </section>
 
 <section data-state="blue-bg">

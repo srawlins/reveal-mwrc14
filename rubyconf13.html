@@ -322,7 +322,7 @@ with all sufficient information, see the ChangeLog file.
   </pre>
   <pre class="news-big-big fragment slow" id="objspace-big-big">* objspace
   * new method:
-    * ObjectSpace.trace_object_allocations
+    <span style="color: yellow; font-weight: bold;">* ObjectSpace.trace_object_allocations</span>
     * ObjectSpace.trace_object_allocations_start
     * ObjectSpace.trace_object_allocations_stop
     * ObjectSpace.trace_object_allocations_clear
@@ -355,9 +355,10 @@ with all sufficient information, see the ChangeLog file.
 
   <ul>
     <li><code>ObjectSpace.trace_object_allocations</code></li>
-    <li><code>ObjectSpace.trace_object_allocations_start</code><sup>*</sup></li>
-    <li><code>ObjectSpace.trace_object_allocations_stop</code><sup>*</sup></li>
-    <li><code>ObjectSpace.trace_object_allocations_clear</code><sup>*</sup></li>
+    <li style="color: #BBB;"><code>ObjectSpace.trace_object_allocations_start</code><sup>*</sup></li>
+    <li style="color: #BBB;"><code>ObjectSpace.trace_object_allocations_stop</code><sup>*</sup></li>
+    <li style="color: #BBB;"><code>ObjectSpace.trace_object_allocations_clear</code><sup>*</sup></li>
+    <li style="color: #BBB;"><code>...</code></li>
   </ul>
 
   <p style="text-align: right; margin-top: 1em;">
@@ -366,7 +367,11 @@ with all sufficient information, see the ChangeLog file.
   </p>
 </section>
 
-<section id="ex1" data-state="default">
+<section data-state="default">
+  <h2 style="line-height: 1.3;">Where am I supposedly hogging all the memory?</h2>
+</section>
+
+<section id="ex1" data-state="default" class="hilights">
   <h1>An Example</h1>
 
   <pre class="fragment" id="ex1-1"><code class="ruby" data-trim>
@@ -381,51 +386,68 @@ with all sufficient information, see the ChangeLog file.
 6      return "a String"
 7    end
 8  end
-    </code></pre>
+  </code></pre>
 
-    <div class="fragment-parent">
-    <pre class="fragment slower" id="ex1-2" style="position: absolute"><code class="ruby" data-trim>
+  <div class="fragment-parent">
+    <pre class="fragment slower"
+         id="ex1-2"
+         style="position: absolute"><code class="ruby" data-trim data-noescape>
 require 'objspace'
 
 a = s = nil
 
-ObjectSpace.trace_object_allocations do
+<div data-hilight-idx="1" class="hi">ObjectSpace.trace_object_allocations do
   a = MyClass.new.an_array
   s = MyClass.new.a_string
-end
+end</div>
 
-ObjectSpace.allocation_sourcefile(a) #=> "example.rb"
-ObjectSpace.allocation_sourceline(a) #=> 3
-ObjectSpace.allocation_class_path(a) #=> "MyClass"
-ObjectSpace.allocation_method_id(a)  #=> "an_array"
+<div data-hilight-idx="2" class="hi">ObjectSpace.allocation_sourcefile(a) #=&gt; "example.rb"
+ObjectSpace.allocation_sourceline(a) #=&gt; 3
+ObjectSpace.allocation_class_path(a) #=&gt; "MyClass"
+ObjectSpace.allocation_method_id(a)  #=&gt; "an_array"
 
-ObjectSpace.allocation_sourcefile(s) #=> "example.rb"
-ObjectSpace.allocation_sourceline(s) #=> 6
-ObjectSpace.allocation_class_path(s) #=> "MyClass"
-ObjectSpace.allocation_method_id(s)  #=> "a_string"
+ObjectSpace.allocation_sourcefile(s) #=&gt; "example.rb"
+ObjectSpace.allocation_sourceline(s) #=&gt; 6
+ObjectSpace.allocation_class_path(s) #=&gt; "MyClass"
+ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"</div>
     </code></pre>
+    <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+    <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
 
-    <pre class="fragment slow" id="ex1-3"><code class="ruby" data-trim>
+    <pre class="fragment slow"
+         id="ex1-3"
+         data-hilight-idx="3"><code class="ruby" data-trim data-noescape>
 require 'objspace'
 
 
 
-ObjectSpace.trace_object_allocations_start
+<div data-hilight-idx="3" class="hi">ObjectSpace.trace_object_allocations_start
 a = MyClass.new.an_array
 s = MyClass.new.a_string
-ObjectSpace.trace_object_allocations_stop
+ObjectSpace.trace_object_allocations_stop</div>
 
-ObjectSpace.allocation_sourcefile(a) #=> "example.rb"
-ObjectSpace.allocation_sourceline(a) #=> 3
-ObjectSpace.allocation_class_path(a) #=> "MyClass"
-ObjectSpace.allocation_method_id(a)  #=> "an_array"
+ObjectSpace.allocation_sourcefile(a) #=&gt; "example.rb"
+ObjectSpace.allocation_sourceline(a) #=&gt; 3
+ObjectSpace.allocation_class_path(a) #=&gt; "MyClass"
+ObjectSpace.allocation_method_id(a)  #=&gt; "an_array"
 
-ObjectSpace.allocation_sourcefile(s) #=> "example.rb"
-ObjectSpace.allocation_sourceline(s) #=> 6
-ObjectSpace.allocation_class_path(s) #=> "MyClass"
-ObjectSpace.allocation_method_id(s)  #=> "a_string"
+ObjectSpace.allocation_sourcefile(s) #=&gt; "example.rb"
+ObjectSpace.allocation_sourceline(s) #=&gt; 6
+ObjectSpace.allocation_class_path(s) #=&gt; "MyClass"
+ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
     </code></pre>
-    </div>
+  </div>
+</section>
+
+<section data-state="default">
+  <h1>Why?</h1>
+  <ul>
+    <li class="fragment">Reduce memory footprint</li>
+    <li class="fragment">
+      Reduce garbage collection time
+      <ul><li class="fragment">(marking and sweeping)</li></ul>
+    </li>
+  </ul>
 </section>
 
 <section data-state="default">
@@ -463,7 +485,7 @@ ObjectSpace.allocation_method_id(s)  #=> "a_string"
     <pre><code class="fragment ruby" data-noescape> 7
  8  require "allocation_stats"
  9
-10  stats = AllocationStats.new do
+10  stats = AllocationStats.trace do
 <div data-hilight-idx="3" class="hi">11    MyClass.new.my_method</div>
 12  end</code></pre>
 
@@ -500,7 +522,7 @@ ObjectSpace.allocation_method_id(s)  #=> "a_string"
     <pre class="fragment"><code class="ruby" data-noescape> 7
  8  require "allocation_stats"
  9
-10  stats = AllocationStats.new do
+10  stats = AllocationStats.trace do
 11    MyClass.new.my_method
 12  end</pre></code>
 
@@ -523,7 +545,7 @@ ObjectSpace.allocation_method_id(s)  #=> "a_string"
   <pre><code class="ruby" data-noescape>require "yaml"
 require "allocation_stats"
 
-stats = AllocationStats.new do
+stats = AllocationStats.trace do
   # lots of objects from Rbconfig::CONFIG["rubylibdir"]
   y = YAML.dump(["one string", "two string"])
 end
@@ -554,7 +576,7 @@ puts stats.allocations(alias_paths: true).group_by(:sourcefile, :class).to_text<
   <pre><code class="ruby" data-noescape>require "yaml"
 require "allocation_stats"
 
-stats = AllocationStats.new do
+stats = AllocationStats.trace do
   # lots of objects from Rbconfig::CONFIG["rubylibdir"]
   y = YAML.dump(["one string", "two string"])
 end
@@ -588,7 +610,7 @@ puts stats.allocations(alias_paths: true).
        ><code class="ruby" data-noescape>require 'hike'
 require 'allocation_stats'
 
-stats = AllocationStats.new.trace do
+stats = AllocationStats.trace do
   path = $:.detect { |p| p =~ /hike/ }
   path = File.dirname(path)
 
@@ -607,7 +629,7 @@ puts stats.allocations(alias_paths: true)
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
   <pre class="fragment"
-       style="font-size: 0.47em;"
+       style="font-size: 0.45em;"
        data-nm8-css="{ 'top': '-17em', 'left': '3em' }"
        ><code class="no-highlight" data-noescape>                   sourcefile                                 class_plus              count
 -------------------------------------------------  ---------------------------------  -----
@@ -659,7 +681,7 @@ puts stats.allocations(alias_paths: true)
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
   <pre class="fragment"
-       style="font-size: 0.47em;"
+       style="font-size: 0.45em;"
        data-nm8-css="{ 'top': '-17em', 'left': '3em' }"
        ><code class="no-highlight" data-noescape>                     sourcefile                          class_plus     count
 -----------------------------------------------------  ---------------  -----
@@ -953,7 +975,7 @@ function nm8_hide(el) {
 }
 
 function show_ex1_2() {
-  $('#ex1-1').css({ left: '-6em', opacity: 0.6 });
+  $('#ex1-1').css({ left: '-3em', opacity: 0.6 });
   $('#ex1-2').parent().css({ top: '-3.6em', left: '3em' });
 }
 

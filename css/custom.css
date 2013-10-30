@@ -68,6 +68,11 @@ div.reveal {
   margin: 0;
 }
 
+/* Override more reveal */
+.reveal pre code {
+  max-height: 420px;
+}
+
 /* I'm sorry tomorrow-night-bright!!! I'm sorry! */
 pre code {
   background: #181818;
@@ -100,9 +105,9 @@ pre code {
 
 .reveal pre.news-big-big {
   box-shadow: none;
+  color: #BBBBBB;
   display: none;
   font-size: 0.16em;
-  font-weight: bold;
   margin: 0;
   position: absolute;
 }

@@ -514,7 +514,7 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
   <div class="code">
     <pre><code class="ruby" data-noescape> 1  class MyClass
  2    def my_method
-<div data-hilight-idx="1" class="hi"> 3      @hash = {2 => "foo", 3 => "bar", 5 => "baz"}</div>
+<div data-hilight-idx="2" class="hi"> 3      @hash = {2 => "foo", 3 => "bar", 5 => "baz"}</div>
  4      @string = "quux"
  5    end
  6  end</code></pre>
@@ -526,17 +526,18 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 11    MyClass.new.my_method
 12  end</pre></code>
 
-    <pre class="fragment"><code class="ruby" data-noescape>13  puts stats.allocations.group_by(:sourcefile, :sourceline, :class).to_text</code></pre>
+    <pre class="fragment"><code class="ruby" data-noescape>13  puts stats.allocations<div data-hilight-idx="1" class="hi">.group_by(:sourcefile, :sourceline, :class)</div>.to_text</code></pre>
   </div>
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
   <pre class="fragment"><code class="no-highlight" data-noescape>             sourcefile                sourceline   class   count
 -------------------------------------  ----------  -------  -----
 ./examples/trace_my_class_group_by.rb           4  String       1
 ./examples/trace_my_class_group_by.rb           3  Hash         1
-<div data-hilight-idx="1" class="hi">./examples/trace_my_class_group_by.rb           3  String       3</div>
+<div data-hilight-idx="2" class="hi">./examples/trace_my_class_group_by.rb           3  String       3</div>
 ./examples/trace_my_class_group_by.rb          11  MyClass      1</code></pre>
 
-  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
 </section>
 
 <section data-state="teal-bg">
@@ -839,12 +840,65 @@ ras[scope]=SCOPE
   </section>
 </section>
 
-<section data-state="wip">
-  <h3>active_support/callbacks.rb:81,:414</h3>
+<section data-state="blue-bg">
+  <section>
+    <h1>Rails 3.2.15</h1>
+    <h3>lib/active_support/callbacks.rb</h3>
+    <pre><code class="ruby" data-trim>
+&nbsp;80  def run_callbacks(kind, *args, &block)
+ 81    send("_run_#{kind}_callbacks", *args, &block)
+ 82  end
+
+...
+
+413  def __callback_runner_name(key, kind)
+414    "_run__#{self.name.hash.abs}__#{kind}__#{key.hash.abs}__callbacks"
+415  end
+    </code></pre>
+  </section>
+
+  <section>
+    <h1>Rails 4.0.0</h1>
+    <h3>lib/active_support/callbacks.rb</h3>
+    <pre><code class="ruby" data-trim>
+383  def __callback_runner_name_cache
+384    @__callback_runner_name_cache ||= ThreadSafe::Cache.new {|cache, kind| cache[kind] = __generate_callback_runner_name(kind) }
+385  end
+386
+387  def __generate_callback_runner_name(kind)
+388    "_run__#{self.name.hash.abs}__#{kind}__callbacks"
+389  end
+390
+391  def __callback_runner_name(kind)
+392    __callback_runner_name_cache[kind]
+393  end
+    </code></pre>
+  </section>
 </section>
 
-<section data-state="wip">
-  <h3>active_record/relation.rb:26,:27</h3>
+<section data-state="blue-bg">
+  <section>
+    <h1>Rails 3.2.15</h1>
+    <h3>active_record/relation.rb</h3>
+    <pre style="font-size: 0.45em; width: 93%;"><code class="ruby" data-trim>
+&nbsp;4  class ActiveRecord::Relation
+
+    ...
+
+ 8  ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
+ 9  MULTI_VALUE_METHODS = [:select, :group, :order, :joins, :where, :having, :bind]
+10  SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :from, :reordering, :reverse_order, :uniq]
+
+    ...
+
+19  def initialize(klass, table)
+      ...
+26    SINGLE_VALUE_METHODS.each {|v| instance_variable_set(:"@#{v}_value", nil)}
+27    (ASSOCIATION_METHODS + MULTI_VALUE_METHODS).each {|v| instance_variable_set(:"@#{v}_values", [])}
+      ...
+30  end
+    </code></pre>
+  </section>
 </section>
 
 <section data-state="wip">
@@ -854,6 +908,16 @@ ras[scope]=SCOPE
 
 <section data-state="wip">
   <h3>sqlite3/statement.rb:108</h3>
+</section>
+
+<section data-state="default">
+  <h2>Things to Google</h2>
+  <ul>
+    <li class="fragment">github blog hey judy</li>
+    <li class="fragment">ruby allocation_stats</li>
+    <li class="fragment">ruby rack-allocation_stats</li>
+    <li class="fragment">koichi sasada efficient 2.1</li>
+  </ul>
 </section>
       </div>
     </div>

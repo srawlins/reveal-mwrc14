@@ -36,7 +36,8 @@ div.reveal {
  * Override default of 0.2s ease
  */
 .reveal .slides section .fragment,
-.reveal .slides section .fragment-parent {
+.reveal .slides section .fragment-parent,
+.reveal .slides section .trans {
   -webkit-transition: all 0.4s ease;
   -moz-transition: all 0.4s ease;
   -ms-transition: all 0.4s ease;
@@ -69,6 +70,10 @@ div.reveal {
 }
 
 /* Override more reveal */
+.reveal pre {
+  width: 92%;
+}
+
 .reveal pre code {
   max-height: 420px;
 }
@@ -207,4 +212,16 @@ pre code {
 
 .reveal .right.half {
   text-align: left;
+}
+
+.reveal .slides section .code.sinatra-app {
+  position: absolute;
+}
+
+.reveal .slides section .code.sinatra-app {
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0);
+}
+
+.reveal .slides section .code.sinatra-app pre {
+  box-shadow: none;
 }

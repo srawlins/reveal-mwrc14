@@ -451,6 +451,11 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 </section>
 
 <section data-state="default">
+  <h2 style="line-height: 1.3;">But my application isn't on Ruby 2.1!</h2>
+  <h3 style="line-height: 1.3;">That's okay! It's a <em>diagnostic</em> tool!</h3>
+</section>
+
+<section data-state="default">
   <h3>ObjectSpace.trace_object_allocations</h3>
   <h2>is</h2>
   <h1>
@@ -630,25 +635,25 @@ puts stats.allocations(alias_paths: true)
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
   <pre class="fragment"
-       style="font-size: 0.45em;"
+       style="font-size: 0.51em;"
        data-nm8-css="{ 'top': '-17em', 'left': '3em' }"
-       ><code class="no-highlight" data-noescape>                   sourcefile                                 class_plus              count
--------------------------------------------------  ---------------------------------  -----
-<div data-hilight-idx="3" class="hi red">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   String                               438</div>
-&lt;RUBYLIBDIR&gt;/pathname.rb                           String                               152
-<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Fixnum,FalseClass&gt;             134</div>
-&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   RubyVM::InstructionSequence          105</div>
-examples/hike_hike.rb                              String                                81
-<div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/pathname.rb                           Array&lt;String&gt;                         67</div>
-&lt;RUBYLIBDIR&gt;/pathname.rb                           String                                67
-<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Array&gt;                          58</div>
-&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array                                 47
-&lt;RUBYLIBDIR&gt;/rubygems.rb                           String                                27</div>
-&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                                21
-<div data-hilight-idx="3" class="hi red">examples/hike_hike.rb                              RubyVM::InstructionSequence           20</div>
-&lt;RUBYLIBDIR&gt;/pathname.rb                           String                                20
-examples/hike_hike.rb                              Array                                 16
-&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                                15
+       ><code class="no-highlight" data-noescape>                   sourcefile                              class_plus           count
+-------------------------------------------------  ---------------------------  -----
+<div data-hilight-idx="3" class="hi red">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   String                         438</div>
+&lt;RUBYLIBDIR&gt;/pathname.rb                           String                         152
+<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Fixnum,FalseClass&gt;       134</div>
+&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   RubyVM::InstructionSequence    105</div>
+examples/hike_hike.rb                              String                          81
+<div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/pathname.rb                           Array&lt;String&gt;                   67</div>
+&lt;RUBYLIBDIR&gt;/pathname.rb                           String                          67
+<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Array&gt;                    58</div>
+&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array                           47
+&lt;RUBYLIBDIR&gt;/rubygems.rb                           String                          27</div>
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                          21
+<div data-hilight-idx="3" class="hi red">examples/hike_hike.rb                              RubyVM::InstructionSequence     20</div>
+&lt;RUBYLIBDIR&gt;/pathname.rb                           String                          20
+examples/hike_hike.rb                              Array                           16
+&lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                          15
 ...</code></pre>
 
   <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
@@ -682,7 +687,6 @@ puts stats.allocations(alias_paths: true)
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
   <pre class="fragment"
-       style="font-size: 0.45em;"
        data-nm8-css="{ 'top': '-17em', 'left': '3em' }"
        ><code class="no-highlight" data-noescape>                     sourcefile                          class_plus     count
 -----------------------------------------------------  ---------------  -----
@@ -717,15 +721,49 @@ puts stats.allocations(alias_paths: true)
   <div class="right half">/path<br />?foo=bar<br /><span class="fragment">&amp;<em>ras[trace]=true</em></span></p>
 </section>
 
-<section data-state="blue-bg">
-  <h2>Rack Middleware</h2>
+<section data-state="blue-bg" id="sinatra-app">
+  <h2 class="trans">
+    <span id="sin1-h2">A Simple Sinatra App</span>
+    <span id="sin2-h2" style="position: absolute; left: 0; display: none;">localhost:9292/erb</span>
+    <span id="sin3-h2" style="position: absolute; left: 0; display: none;">localhost:9292/erb<span style="color: #FFFF66;">?ras[trace]=true</span></span>
+    &nbsp;
+  </h2>
+
   <div style="position: relative;">
+    <div class="code sinatra-app" id="sin1">
+      <pre><code class="ruby" data-noescape>class SinatraTemplatesApp &lt; Sinatra::Base
+  HELLOS = ["Hello", "Hola", "Bonjour", "Gutentag",
+            "こんにちは", "привет"]
+
+  enable :inline_templates
+
+  get "/erb" do
+    erb :erb
+  end
+end
+
+__END__
+
+@@ erb</code></pre>
+    <pre><code class="html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;ul id="hi"&gt;
+      &lt;% HELLOS.each do |hello| %&gt;
+        &lt;li class="greeting"&gt;&lt;%= hello %&gt; World!&lt;/li&gt;
+      &lt;% end %&gt;
+    &lt;/ul&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    </div>
     <img src="img/ras_01.png"
+         class="fragment"
+         id="sin2"
          style="position: absolute;"
-         data-nm8-css="{ 'top': '-1.6em', 'left': '-2.6em', 'opacity': 0.7 }"
+         data-nm8-css="{ 'top': '-1.6em', 'left': '-2.6em', 'xopacity': 0.7 }"
          data-nm8-class="pause-0-3" />
     <img src="img/ras_trace_01.png"
          class="fragment"
+         id="sin3"
          data-nm8-css="{ 'top': '0.6em', 'left': '2em' }"
          data-nm8-class="pause-0-3" />
     </div>
@@ -768,14 +806,13 @@ ras[scope]=SCOPE
 <section data-state="blue-bg">
   <h2>?ras[output]=json</h2>
   <pre class="fragment-parent"
-       style="font-size: 0.48em;"
-       data-nm8-css="{ 'left': '-2em', 'opacity': 0.6 }"
+       data-nm8-css="{ 'left': '-3em', 'opacity': 0.6 }"
        ><code class="no-highlight" style="word-wrap: break-word;">[{"group_key":["/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",445,"String"],"allocations":[{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},...</code></pre>
 
   <pre class="fragment"
-       style="font-size: 0.50em;"
-       data-nm8-css="{ 'top': '-7em', 'left': '4em' }"
-       ><code class="json">[
+       style="width: 93%;"
+       data-nm8-css="{ 'top': '-12em', 'left': '3em' }"
+       ><code class="json" style="max-height: 430px;">[
   { "group_key": [
       "/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",
       445,
@@ -995,6 +1032,9 @@ Reveal.addEventListener( 'fragmentshown', function(event) {
   }
 
   if (fragment.data('nm8-css')) { nm8_show(fragment); }
+
+  if (fragment.attr('id') == 'sin2') { sin2_show(fragment); }
+  if (fragment.attr('id') == 'sin3') { sin3_show(fragment); }
 });
 
 Reveal.addEventListener( 'fragmenthidden', function(event) {
@@ -1012,6 +1052,9 @@ Reveal.addEventListener( 'fragmenthidden', function(event) {
   }
 
   if (fragment.data('nm8-css')) { nm8_hide(fragment); }
+
+  if (fragment.attr('id') == 'sin2') { sin2_hide(fragment); }
+  if (fragment.attr('id') == 'sin3') { sin3_hide(fragment); }
 });
 
 function nm8_show(el) {
@@ -1123,6 +1166,46 @@ function lolight(el) {
   var idx = el.data('hilight-idx');
   el.parents(".hilights").find("div[data-hilight-idx]").removeClass("light");
   el.parents(".hilights").find("div[data-hilight-idx='" + (idx-1) + "']").addClass("light");
+}
+
+function sin2_show(el) {
+  $('#sin1').css({ opacity: '0.5' });
+  $('#sin1-h2').fadeOut();
+  $('#sin2-h2').fadeIn();
+}
+
+function sin3_show(el) {
+  $('#sin1').css({ opacity: '0.3' });
+  $('#sin2').css({ opacity: '0.5' });
+  el.closest('section').find('h2')
+    .delay(700)
+    .queue(function() { $(this).css({ fontSize: '1.2em' }).dequeue(); })
+    .delay(700)
+    .queue(function() {
+      $('#sin2-h2').fadeOut();
+      $('#sin3-h2').fadeIn();
+      $(this).dequeue();
+    });
+}
+
+function sin2_hide(el) {
+  $('#sin1').css({ opacity: '' });
+  $('#sin2-h2').fadeOut();
+  $('#sin1-h2').fadeIn();
+}
+
+function sin3_hide(el) {
+  $('#sin1').css({ opacity: '0.5' });
+  $('#sin2').css({ opacity: '' });
+  el.closest('section').find('h2')
+    .delay(100)
+    .queue(function() {
+      $('#sin3-h2').fadeOut();
+      $('#sin2-h2').fadeIn();
+      $(this).dequeue();
+    })
+    .delay(700)
+    .queue(function() { $(this).css('font-size', '').dequeue(); });
 }
     </script>
 

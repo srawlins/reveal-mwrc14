@@ -913,7 +913,8 @@ ras[scope]=SCOPE
     <h3>lib/active_support/callbacks.rb</h3>
     <pre><code class="ruby" data-trim>
 383  def __callback_runner_name_cache
-384    @__callback_runner_name_cache ||= ThreadSafe::Cache.new {|cache, kind| cache[kind] = __generate_callback_runner_name(kind) }
+384    @__callback_runner_name_cache ||= ThreadSafe::Cache.new {|cache, kind|
+                             cache[kind] = __generate_callback_runner_name(kind) }
 385  end
 386
 387  def __generate_callback_runner_name(kind)

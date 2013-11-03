@@ -562,21 +562,21 @@ end
 
 puts stats.allocations(alias_paths: true).group_by(:sourcefile, :class).to_text</code></pre>
 
-  <pre class="fragment"><code class="no-highlight" data-noescape style="font-size: 0.85em;">               sourcefile                                class                  count
-----------------------------------------  ------------------------------------  -----
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    String                                   38
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    MatchData                                 5
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    Regexp                                    1
-&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Psych::Emitter                            1
-&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Array                                     2
-&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          Psych::Visitors::Emitter                  1
-&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          StringIO                                  1
-&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          String                                    3
-&lt;RUBYLIBDIR&gt;/psych/tree_builder.rb        Psych::Nodes::Scalar                      2
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb  Array                                    12
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb  Method                                    5
-&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      String                                    5
-&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      MatchData                                 2
+  <pre class="fragment"><code class="no-highlight" data-noescape>               sourcefile                             class               count
+----------------------------------------  ------------------------------  -----
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    String                             38
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    MatchData                           5
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    Regexp                              1
+&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Psych::Emitter                      1
+&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Array                               2
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          Psych::Visitors::Emitter            1
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          StringIO                            1
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb          String                              3
+&lt;RUBYLIBDIR&gt;/psych/tree_builder.rb        Psych::Nodes::Scalar                2
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb  Array                              12
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb  Method                              5
+&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      String                              5
+&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      MatchData                           2
 ...</code></pre>
 </section>
 
@@ -596,19 +596,19 @@ puts stats.allocations(alias_paths: true).
   sort_by_count.
   to_text</code></pre>
 
-  <pre class="fragment"><code class="no-highlight" data-noescape style="font-size: 0.85em;">               sourcefile                                class                  count
------------------------------------------  ------------------------------------  -----
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     String                                   38
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   String                                   21
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Array                                    12
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Method                                    5
-&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb       String                                    5
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     MatchData                                 5
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Hash                                      3
-&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb           String                                    3
-&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb           Array                                     3
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   MatchData                                 3
-&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb     String                                    3
+  <pre class="fragment"><code class="no-highlight" data-noescape>               sourcefile                             class               count
+-----------------------------------------  ------------------------------  -----
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     String                             38
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   String                             21
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Array                              12
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Method                              5
+&lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb       String                              5
+&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     MatchData                           5
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Hash                                3
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb           String                              3
+&lt;RUBYLIBDIR&gt;/psych/nodes/node.rb           Array                               3
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   MatchData                           3
+&lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb     String                              3
 ...</code></pre>
 </section>
 
@@ -858,7 +858,7 @@ ras[scope]=SCOPE
   </section>
 </section>
 
-<section data-state="blue-bg">
+<!--section data-state="blue-bg">
   <section>
     <h2>Simple Sinatra App</h2>
     <img src="img/ras-sinatra.png" />
@@ -873,7 +873,7 @@ ras[scope]=SCOPE
     <h3>Sinatra App w/ /slim</h3>
     <img src="img/ras-sinatra-slim.png" />
   </section>
-</section>
+</section-->
 
 <section data-state="blue-bg">
   <section>
@@ -931,23 +931,23 @@ ras[scope]=SCOPE
   <section>
     <h1>Rails 3.2.15</h1>
     <h3>active_record/relation.rb</h3>
-    <pre style="font-size: 0.45em; width: 93%;"><code class="ruby" data-trim>
-&nbsp;4  class ActiveRecord::Relation
+    <pre><code class="ruby" data-trim>
+ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
+MULTI_VALUE_METHODS = [:select, :group, :order, :joins, :where, :having, :bind]
+SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :from, :reordering,
+                                                           :reverse_order, :uniq]
 
-    ...
+def initialize(klass, table)
 
- 8  ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
- 9  MULTI_VALUE_METHODS = [:select, :group, :order, :joins, :where, :having, :bind]
-10  SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :from, :reordering, :reverse_order, :uniq]
+  ...
 
-    ...
+  SINGLE_VALUE_METHODS.each {|v| instance_variable_set(:"@#{v}_value", nil)}
+  (ASSOCIATION_METHODS + MULTI_VALUE_METHODS).each {|v|
+                                      instance_variable_set(:"@#{v}_values", [])}
 
-19  def initialize(klass, table)
-      ...
-26    SINGLE_VALUE_METHODS.each {|v| instance_variable_set(:"@#{v}_value", nil)}
-27    (ASSOCIATION_METHODS + MULTI_VALUE_METHODS).each {|v| instance_variable_set(:"@#{v}_values", [])}
-      ...
-30  end
+  ...
+
+end
     </code></pre>
   </section>
 </section>

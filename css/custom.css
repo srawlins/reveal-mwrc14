@@ -159,6 +159,15 @@ pre code {
   text-align: right;
 }
 
+.teal-bg .reveal footer a:link,
+.teal-bg .reveal footer a:visited,
+.teal-bg .reveal footer a:hover,
+.blue-bg .reveal footer a:link,
+.blue-bg .reveal footer a:visited,
+.blue-bg .reveal footer a:hover {
+  color: white;
+}
+
 /* only needed for 1024x768 */
 #ex1 code {
   font-size: 0.94em;

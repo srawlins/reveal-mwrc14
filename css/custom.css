@@ -92,6 +92,11 @@ pre code {
   background: #181818;
 }
 
+/* add another class to tomorrow-night-bright */
+pre .attribute {
+  color: #EAEAEA;
+}
+
 /* from tomorrow-night-bright.css */
 .reveal .slides section div.code {
   background: black;

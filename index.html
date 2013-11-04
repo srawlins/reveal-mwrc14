@@ -777,7 +777,7 @@ end
 __END__
 
 @@ erb</code></pre>
-    <pre><code class="html">&lt;html&gt;
+    <pre><code class="xml">&lt;html&gt;
   &lt;body&gt;
     &lt;ul id="hi"&gt;
       &lt;% HELLOS.each do |hello| %&gt;
@@ -1030,8 +1030,37 @@ class String
 end</code></pre>
 </section>
 
-<section data-state="wip">
-  <h3>sqlite3/statement.rb:108</h3>
+<section data-state="blue-bg">
+  <h2>Not Always Easy</h2>
+  <p>
+    <a href="https://github.com/rails/rails/blob/v4.0.1/actionpack/lib/action_view/helpers/tag_helper.rb#L66" target="_blank">action_view/helpers/tag_helper.rb:66</a>
+  </p>
+  <pre style="width: 93%;"><code class="ruby" data-noescape>def tag(name, options = nil, open = false, escape = true)
+  "<#{name}#{tag_options(options, escape) if options}#{open ? ">" : "/>"}".html_safe
+end</code></pre>
+</section>
+
+<section data-state="blue-bg">
+  <h2>Not Always Easy</h2>
+  <p>
+    <a href="https://github.com/sparklemotion/sqlite3-ruby/blob/v1.3.8/lib/sqlite3/statement.rb#L108" target="_blank">sqlite3/statement.rb:108</a>
+  </p>
+  <pre><code class="ruby" data-noescape>def each
+  loop do
+    val = step    <span style="color: red;">&lt;== line 108</span>
+    break self if done?
+    yield val
+  end
+end</code></pre>
+  <ul>
+    <li class="fragment">Where is <code>#step</code>?</li>
+    <li class="fragment">
+      It's an 88-line C function in
+      <a
+      href="https://github.com/sparklemotion/sqlite3-ruby/blob/v1.3.8/ext/sqlite3/statement.c#L107" target="_blank">ext/sqlite3/statement.c</a>
+      :(
+    </li>
+  </ul>
 </section>
 
 <section data-state="default">
@@ -1068,7 +1097,7 @@ Reveal.initialize({
     { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
     { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
     { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+    { src: 'plugin/highlight/highlight-reveal.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
     { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
     { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
   ]

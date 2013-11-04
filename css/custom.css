@@ -78,6 +78,15 @@ div.reveal {
   max-height: 420px;
 }
 
+.reveal ul,
+.reveal li {
+  margin-top: 0.8em;
+}
+
+.reveal li:first-child {
+  margin-top: 0;
+}
+
 /* I'm sorry tomorrow-night-bright!!! I'm sorry! */
 pre code {
   background: #181818;
@@ -169,18 +178,37 @@ pre code {
 }
 
 /* only needed for 1024x768 */
-#ex1 code {
-  font-size: 0.94em;
-  line-height: 1.19em;
+#ex1 pre {
+  width: 80%;
+  font-size: 0.6em;
 }
 
 /* only needed for 1024x768 */
-#ex2 >pre code {
-  font-size: 0.94em;
+#ex1 code {
+  line-height: 1.19em;
+  max-height: 440px;
 }
 
-#ex3 >div {
-  font-size: 0.94em;
+/* only needed for 1024x768 */
+#ex2 pre,
+#ex3 pre {
+  font-size: 0.60em;
+}
+
+#ex2 pre code,
+#ex3 pre code {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+#ex2 pre:first-child code,
+#ex3 pre:first-child code {
+  padding-top: 5px;
+}
+
+#ex2 pre:last-child code,
+#ex3 pre:last-child code {
+  padding-bottom: 5px;
 }
 
 .reveal .hi {

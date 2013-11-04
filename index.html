@@ -40,8 +40,16 @@
   </p>
 </section>
 
+<section data-state="default">
+  <h2>Ruby 2.1.0-preview1 is out!</h2>
+  <ul style="list-style-type: none;">
+    <li class="fragment"><code>$ rbenv install 2.1.0-preview1</code></li>
+    <li class="fragment"><code>$ rvm install ruby-2.1.0-preview1</code></li>
+  </ul>
+</section>
+
 <section data-state="default" class="no-shadow">
-  <h2>Ruby 2.1-preview1 is out!</h2>
+  <h2>Ruby 2.1 NEWS</h2>
   <pre class="news">
 = NEWS for Ruby 2.1.0
 
@@ -355,10 +363,10 @@ with all sufficient information, see the ChangeLog file.
 
   <ul>
     <li><code>ObjectSpace.trace_object_allocations</code></li>
-    <li style="color: #BBB;"><code>ObjectSpace.trace_object_allocations_start</code><sup>*</sup></li>
-    <li style="color: #BBB;"><code>ObjectSpace.trace_object_allocations_stop</code><sup>*</sup></li>
-    <li style="color: #BBB;"><code>ObjectSpace.trace_object_allocations_clear</code><sup>*</sup></li>
-    <li style="color: #BBB;"><code>...</code></li>
+    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_start</code><sup>*</sup></li>
+    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_stop</code><sup>*</sup></li>
+    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_clear</code><sup>*</sup></li>
+    <li style="color: #BBB; margin-top: 0.2em;"><code>...</code></li>
   </ul>
 
   <p style="text-align: right; margin-top: 1em;">
@@ -368,11 +376,28 @@ with all sufficient information, see the ChangeLog file.
 </section>
 
 <section data-state="default">
-  <h2 style="line-height: 1.3;">Where am I supposedly hogging all this memory?</h2>
+  <h2>Anecdote from GitHub</h2>
+
+  <pre style="font-size: 0.9em;"><code class="ruby">GitHub.preload_all
+GC.start
+count = ObjectSpace.count_objects
+
+puts count[:TOTAL] - count[:FREE]
+#=> 605183</code></pre>
+
+  <h3>&gt; 600k Ruby objects!</h3>
+
+  <footer>
+    <a href="https://github.com/blog/1489-hey-judy-don-t-make-it-bad">[github blog]</a>
+  </footer>
+</section>
+
+<section data-state="default">
+  <h2 style="line-height: 1.3;">"Where am I supposedly hogging all this memory?"</h2>
 </section>
 
 <section id="ex1" data-state="default" class="hilights">
-  <h1>An Example</h1>
+  <h3>Enter <code>::trace_object_allocations</code></h3>
 
   <pre class="fragment" id="ex1-1"><code class="ruby" data-trim>
 # example.rb
@@ -481,7 +506,7 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 </section>
 
 <section data-state="teal-bg" id="ex2" class="hilights">
-  <h2>Low-level Example</h2>
+  <h3>Low-level Example</h3>
 
   <div class="code">
     <pre><code class="ruby" data-noescape> 1  class MyClass
@@ -493,13 +518,12 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 
     <pre><code class="fragment ruby" data-noescape> 7
  8  require "allocation_stats"
- 9
-10  stats = AllocationStats.trace do
-<div data-hilight-idx="3" class="hi">11    MyClass.new.my_method</div>
-12  end</code></pre>
+ 9  stats = AllocationStats.trace do
+<div data-hilight-idx="3" class="hi">10    MyClass.new.my_method</div>
+11  end</code></pre>
 
-    <pre><code class="fragment ruby">13
-14  puts stats.allocations.to_text</code></pre>
+    <pre><code class="fragment ruby">12
+13  puts stats.allocations.to_text</code></pre>
   </div>
 
   <pre class="fragment"><code class="no-highlight" data-noescape>           sourcefile             sourceline  class_path  method_id   class
@@ -509,7 +533,7 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 ./examples/trace_my_class_raw.rb           3  MyClass     my_method  String
 ./examples/trace_my_class_raw.rb           3  MyClass     my_method  String
 ./examples/trace_my_class_raw.rb           3  MyClass     my_method  String</div>
-<div data-hilight-idx="3" class="hi">./examples/trace_my_class_raw.rb          11  Class       new        MyClass</div>
+<div data-hilight-idx="3" class="hi">./examples/trace_my_class_raw.rb          10  Class       new        MyClass</div>
 </code></pre>
 
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
@@ -518,7 +542,7 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 </section>
 
 <section data-state="teal-bg" id="ex3" class="hilights">
-  <h2>group_by Example</h2>
+  <h3>group_by Example</h3>
 
   <div class="code">
     <pre><code class="ruby" data-noescape> 1  class MyClass
@@ -530,12 +554,12 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 
     <pre class="fragment"><code class="ruby" data-noescape> 7
  8  require "allocation_stats"
- 9
-10  stats = AllocationStats.trace do
-11    MyClass.new.my_method
-12  end</pre></code>
+ 9  stats = AllocationStats.trace do
+10    MyClass.new.my_method
+11  end</pre></code>
 
-    <pre class="fragment"><code class="ruby" data-noescape>13  puts stats.allocations<div data-hilight-idx="1" class="hi">.group_by(:sourcefile, :sourceline, :class)</div>.to_text</code></pre>
+    <pre class="fragment" style="font-size: 0.55em;"><code class="ruby" data-noescape>12
+13  puts stats.allocations<div data-hilight-idx="1" class="hi">.group_by(:sourcefile, :sourceline, :class)</div>.to_text</code></pre>
   </div>
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 
@@ -544,7 +568,7 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 ./examples/trace_my_class_group_by.rb           4  String       1
 ./examples/trace_my_class_group_by.rb           3  Hash         1
 <div data-hilight-idx="2" class="hi">./examples/trace_my_class_group_by.rb           3  String       3</div>
-./examples/trace_my_class_group_by.rb          11  MyClass      1</code></pre>
+./examples/trace_my_class_group_by.rb          10  MyClass      1</code></pre>
 
   <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
 </section>
@@ -616,7 +640,7 @@ puts stats.allocations(alias_paths: true).
   <h2>class_plus</h2>
 
   <pre class="fragment-parent"
-       data-nm8-css="{ 'left': '-6em', 'opacity': 0.6 }"
+       data-nm8-css="{ 'left': '-3.5em', 'opacity': 0.6 }"
        ><code class="ruby" data-noescape>require 'hike'
 require 'allocation_stats'
 
@@ -640,7 +664,7 @@ puts stats.allocations(alias_paths: true)
 
   <pre class="fragment"
        style="font-size: 0.51em;"
-       data-nm8-css="{ 'top': '-17em', 'left': '3em' }"
+       data-nm8-css="{ 'top': '-17em', 'left': '2.5em' }"
        ><code class="no-highlight" data-noescape>                   sourcefile                              class_plus           count
 -------------------------------------------------  ---------------------------  -----
 <div data-hilight-idx="3" class="hi red">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   String                         438</div>
@@ -1100,7 +1124,7 @@ function nm8_hide(el) {
 
 function show_ex1_2() {
   $('#ex1-1').css({ left: '-3em', opacity: 0.6 });
-  $('#ex1-2').parent().css({ top: '-3.6em', left: '3em' });
+  $('#ex1-2').parent().css({ top: '-3.6em', left: '2em' });
 }
 
 function hide_ex1_2() {

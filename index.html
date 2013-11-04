@@ -49,7 +49,7 @@
 </section>
 
 <section data-state="default" class="no-shadow">
-  <h2>Ruby 2.1 NEWS</h2>
+  <h2>Ruby 2.1 <span style="font-variant: small-caps">news</span></h2>
   <pre class="news">
 = NEWS for Ruby 2.1.0
 
@@ -902,6 +902,40 @@ ras[scope]=SCOPE
 </section-->
 
 <section data-state="blue-bg">
+  <h2>What do I do???</h2>
+  <h3 class="fragment" style="margin-top: 1em;">Allocate less.</h3>
+</section>
+
+<section data-state="blue-bg">
+  <h2>How do I allocate less?</h2>
+  <h3 class="fragment" style="margin-top: 1em;">That depends :)</h3>
+</section>
+
+<section data-state="blue-bg">
+  <p>Use self-modifying collection methods where possible.</p>
+  <pre><code class="no-highlight" data-noescape>diff --git a/lib/temple/hash.rb b/lib/temple/hash.rb
+index a2235c0..f1e5a70 100644
+--- a/lib/temple/hash.rb
++++ b/lib/temple/hash.rb
+@@ -24,3 +24,3 @@ def each
+     def keys
+<span style="color: red;">-      @hash.inject([]) {|keys, h| keys<span style="background-color: rgba(255,0,0,0.2);"> += h.keys</span> }.uniq</span>
+<span style="color: #00FF00;">+      @hash.inject([]) {|keys, h| keys<span style="background-color: rgba(0,255,0,0.2);">.concat(h.keys)</span> }.uniq</span>
+     end</code></pre>
+
+  <footer>
+    <a href="https://github.com/judofyr/temple/pull/75/files">[judofyr/temple #75]</a><br />
+    <a href="http://rubydoc.info/stdlib/core/Array#concat-instance_method">[ Array#concat ]</a><br />
+    <a href="http://rubydoc.info/stdlib/core/Array#%2B-instance_method">[ Array#+ ]</a>
+  </footer>
+</section>
+
+<section data-state="blue-bg">
+  <h2>Memoization</h2>
+  <p class="fragment">(String interpolation and concatenation)</p>
+</section>
+
+<section data-state="blue-bg">
   <section>
     <h1>Rails 3.2.15</h1>
   </section>
@@ -979,9 +1013,21 @@ end
   </section>
 </section>
 
-<section data-state="wip">
-  <h2>active_support/core_ext/</h2>
-  <h3>string/output_safety.rb:24,:184</h3>
+<section data-state="blue-bg">
+  <h2>Not Always Easy</h2>
+  <p>active_support/core_ext/string/output_safety.rb:184</p>
+  <pre><code class="ruby" data-noescape>class SafeBuffer &lt; String
+  def initialize(*)
+    @html_safe = true
+    super
+  end
+end
+
+class String
+  def html_safe
+    ActiveSupport::SafeBuffer.new(self) <span style="color: red;">&lt;== line 184</span>
+  end
+end</code></pre>
 </section>
 
 <section data-state="wip">
@@ -1124,7 +1170,7 @@ function nm8_hide(el) {
 
 function show_ex1_2() {
   $('#ex1-1').css({ left: '-3em', opacity: 0.6 });
-  $('#ex1-2').parent().css({ top: '-3.6em', left: '2em' });
+  $('#ex1-2').parent().css({ top: '-4em', left: '3.5em' });
 }
 
 function hide_ex1_2() {

@@ -954,7 +954,9 @@ index a2235c0..f1e5a70 100644
 <section data-state="blue-bg">
   <section>
     <h1>Rails 3.2.15</h1>
-    <h3>lib/active_support/callbacks.rb</h3>
+    <h3>
+      <a href="https://github.com/rails/rails/blob/v3.2.15/activesupport/lib/active_support/callbacks.rb#L80" target="_blank">lib/active_support/callbacks.rb</a>
+    </h3>
     <pre><code class="ruby" data-trim>
 &nbsp;80  def run_callbacks(kind, *args, &block)
  81    send("_run_#{kind}_callbacks", *args, &block)
@@ -970,7 +972,9 @@ index a2235c0..f1e5a70 100644
 
   <section>
     <h1>Rails 4.0.0</h1>
-    <h3>lib/active_support/callbacks.rb</h3>
+    <h3>
+      <a href="https://github.com/rails/rails/blob/v4.0.0/activesupport/lib/active_support/callbacks.rb#L383" target="_blank">lib/active_support/callbacks.rb</a>
+    </h3>
     <pre><code class="ruby" data-trim>
 383  def __callback_runner_name_cache
 384    @__callback_runner_name_cache ||= ThreadSafe::Cache.new {|cache, kind|
@@ -991,7 +995,9 @@ index a2235c0..f1e5a70 100644
 <section data-state="blue-bg">
   <section>
     <h1>Rails 3.2.15</h1>
-    <h3>active_record/relation.rb</h3>
+    <h3>
+      <a href="https://github.com/rails/rails/blob/v3.2.15/activerecord/lib/active_record/relation.rb#L6" target="_blank">active_record/relation.rb</a>
+    </h3>
     <pre><code class="ruby" data-trim>
 ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
 MULTI_VALUE_METHODS = [:select, :group, :order, :joins, :where, :having, :bind]
@@ -1015,7 +1021,9 @@ end
 
 <section data-state="blue-bg">
   <h2>Not Always Easy</h2>
-  <p>active_support/core_ext/string/output_safety.rb:184</p>
+  <p>
+    <a href="https://github.com/rails/rails/blob/v3.2.15/activesupport/lib/active_support/core_ext/string/output_safety.rb#L184" target="_blank">active_support/core_ext/string/output_safety.rb:184</a>
+  </p>
   <pre><code class="ruby" data-noescape>class SafeBuffer &lt; String
   def initialize(*)
     @html_safe = true

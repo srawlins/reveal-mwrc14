@@ -692,11 +692,11 @@ examples/hike_hike.rb                              Array                        
   <h2>burn</h2>
 
   <pre class="fragment-parent"
-       data-nm8-css="{ 'left': '-6em', 'opacity': 0.6 }"
+       data-nm8-css="{ 'left': '-3.5em', 'opacity': 0.6 }"
        ><code class="ruby" data-noescape>require 'hike'
 require 'allocation_stats'
 
-stats = AllocationStats.new(<div data-hilight-idx="1" class="hi">burn: 1</div>).trace do
+stats = AllocationStats.new<div data-hilight-idx="1" class="hi">(burn: 1)</div>.trace do
   path = $:.detect { |p| p =~ /hike/ }
   path = File.dirname(path)
 
@@ -791,12 +791,12 @@ __END__
          class="fragment"
          id="sin2"
          style="position: absolute;"
-         data-nm8-css="{ 'top': '-1.6em', 'left': '-2.6em', 'xopacity': 0.7 }"
+         data-nm8-css="{ 'top': '-0.7em', 'left': '-0.7em' }"
          data-nm8-class="pause-0-3" />
     <img src="img/ras_trace_01.png"
          class="fragment"
          id="sin3"
-         data-nm8-css="{ 'top': '0.6em', 'left': '2em' }"
+         data-nm8-css="{ 'top': '0.4em', 'left': '2.3em' }"
          data-nm8-class="pause-0-3" />
     </div>
 </section>
@@ -1211,7 +1211,7 @@ function sin2_show(el) {
 
 function sin3_show(el) {
   $('#sin1').css({ opacity: '0.3' });
-  $('#sin2').css({ opacity: '0.5' });
+  $('#sin2').css({ opacity: '0.7' });
   el.closest('section').find('h2')
     .delay(700)
     .queue(function() { $(this).css({ fontSize: '1.2em' }).dequeue(); })

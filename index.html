@@ -959,33 +959,34 @@ index a2235c0..f1e5a70 100644
 </section>
 
 <section data-state="blue-bg">
-  <section>
+  <section class="hilights">
     <h1>Rails 3.2.15</h1>
     <h3>
       <a href="https://github.com/rails/rails/blob/v3.2.15/activesupport/lib/active_support/callbacks.rb#L80" target="_blank">lib/active_support/callbacks.rb</a>
     </h3>
-    <pre><code class="ruby" data-trim>
+    <pre><code class="ruby" data-trim data-noescape>
 &nbsp;80  def run_callbacks(kind, *args, &block)
- 81    send("_run_#{kind}_callbacks", *args, &block)
+<div data-hilight-idx="1" class="hi"> 81    send("_run_#{kind}_callbacks", *args, &block)</div>
  82  end
 
 ...
 
 413  def __callback_runner_name(key, kind)
-414    "_run__#{self.name.hash.abs}__#{kind}__#{key.hash.abs}__callbacks"
+<div data-hilight-idx="1" class="hi">414    "_run__#{self.name.hash.abs}__#{kind}__#{key.hash.abs}__callbacks"</div>
 415  end
     </code></pre>
+    <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
   </section>
 
-  <section>
+  <section class="hilights">
     <h1>Rails 4.0.0</h1>
     <h3>
       <a href="https://github.com/rails/rails/blob/v4.0.0/activesupport/lib/active_support/callbacks.rb#L383" target="_blank">lib/active_support/callbacks.rb</a>
     </h3>
-    <pre><code class="ruby" data-trim>
+    <pre><code class="ruby" data-trim data-noescape>
 383  def __callback_runner_name_cache
-384    @__callback_runner_name_cache ||= ThreadSafe::Cache.new {|cache, kind|
-                             cache[kind] = __generate_callback_runner_name(kind) }
+384    <div data-hilight-idx="1" class="hi">@__callback_runner_name_cache ||= ThreadSafe::Cache.new {|cache, kind|
+                             cache[kind] = __generate_callback_runner_name(kind) }</div>
 385  end
 386
 387  def __generate_callback_runner_name(kind)
@@ -996,33 +997,35 @@ index a2235c0..f1e5a70 100644
 392    __callback_runner_name_cache[kind]
 393  end
     </code></pre>
+    <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
   </section>
 </section>
 
 <section data-state="blue-bg">
-  <section>
+  <section class="hilights">
     <h1>Rails 3.2.15</h1>
     <h3>
       <a href="https://github.com/rails/rails/blob/v3.2.15/activerecord/lib/active_record/relation.rb#L6" target="_blank">active_record/relation.rb</a>
     </h3>
-    <pre><code class="ruby" data-trim>
-ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
+    <pre><code class="ruby" data-trim data-noescape>
+class ActiveRecord::Relation
+  <div data-hilight-idx="1" class="hi">ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
 MULTI_VALUE_METHODS = [:select, :group, :order, :joins, :where, :having, :bind]
 SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :from, :reordering,
-                                                           :reverse_order, :uniq]
+                                                         :reverse_order, :uniq]</div>
 
-def initialize(klass, table)
+  def initialize(klass, table)
 
-  ...
+    ...
 
-  SINGLE_VALUE_METHODS.each {|v| instance_variable_set(:"@#{v}_value", nil)}
-  (ASSOCIATION_METHODS + MULTI_VALUE_METHODS).each {|v|
-                                      instance_variable_set(:"@#{v}_values", [])}
+    <div data-hilight-idx="1" class="hi">SINGLE_VALUE_METHODS</div>.each {|v| <div data-hilight-idx="2" class="hi">instance_variable_set(:"@#{v}_value", nil)</div>}
+    <div data-hilight-idx="1" class="hi">(ASSOCIATION_METHODS + MULTI_VALUE_METHODS)</div>.each {|v|
+                                      <div data-hilight-idx="2" class="hi">instance_variable_set(:"@#{v}_values", [])</div>}
 
-  ...
-
-end
+    ...
     </code></pre>
+    <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+    <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
   </section>
 </section>
 
@@ -1079,12 +1082,32 @@ end</code></pre>
 </section>
 
 <section data-state="default">
+  <h1>Be Excited!</h1>
+  <ul>
+    <li class="fragment">Be aware of your object allocations.</li>
+    <li class="fragment">Be aware of how much garbage collection costs you.</li>
+    <li class="fragment">Add <code>::trace_object_allocations</code> to your toolbox.</li>
+  </ul>
+</section>
+
+<section data-state="default">
   <h2>Things to Google</h2>
   <ul>
     <li class="fragment">github blog hey judy</li>
     <li class="fragment">ruby allocation_stats</li>
     <li class="fragment">ruby rack-allocation_stats</li>
     <li class="fragment">koichi sasada efficient 2.1</li>
+  </ul>
+</section>
+
+<section data-state="default">
+  <h1>Thanks</h1>
+  <ul>
+    <li class="fragment">Aman Gupta, @tmm1</li>
+    <li class="fragment">GitHub</li>
+    <li class="fragment">Matt Brooks</li>
+    <li class="fragment">Ruby Central</li>
+    <li class="fragment">Hakim El Hattab for reveal.js</li>
   </ul>
 </section>
       </div>

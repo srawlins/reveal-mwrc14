@@ -573,7 +573,7 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
   <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
 </section>
 
-<section data-state="teal-bg">
+<section data-state="teal-bg" class="hilights">
   <h2>Psych</h2>
 
   <pre><code class="ruby" data-noescape>require "yaml"
@@ -581,15 +581,17 @@ require "allocation_stats"
 
 stats = AllocationStats.trace do
   # lots of objects from Rbconfig::CONFIG["rubylibdir"]
-  y = YAML.dump(["one string", "two string"])
+  <div data-hilight-idx="1" class="hi">y = YAML.dump(["one string", "two string"])</div>
 end
 
-puts stats.allocations(alias_paths: true).group_by(:sourcefile, :class).to_text</code></pre>
+puts stats.allocations(alias_paths: true)<div data-hilight-idx="2" class="hi">.group_by(:sourcefile, :class)</div>.to_text</code></pre>
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
 
   <pre class="fragment"><code class="no-highlight" data-noescape>               sourcefile                             class               count
 ----------------------------------------  ------------------------------  -----
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    String                             38
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    MatchData                           5
+<div data-hilight-idx="3" class="hi">&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    String                             38</div>
+<div data-hilight-idx="4" class="hi">&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    MatchData                           5</div>
 &lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb    Regexp                              1
 &lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Psych::Emitter                      1
 &lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb    Array                               2
@@ -602,9 +604,11 @@ puts stats.allocations(alias_paths: true).group_by(:sourcefile, :class).to_text<
 &lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      String                              5
 &lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb      MatchData                           2
 ...</code></pre>
+  <span class="fragment" data-hilight-idx="3" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="4" style="display: none;"></span>
 </section>
 
-<section data-state="teal-bg">
+<section data-state="teal-bg" class="hilights">
   <h2>Psych - sorted</h2>
 
   <pre><code class="ruby" data-noescape>require "yaml"
@@ -616,15 +620,17 @@ stats = AllocationStats.trace do
 end
 
 puts stats.allocations(alias_paths: true).
-  group_by(:sourcefile, :class).
-  sort_by_count.
+  <div data-hilight-idx="1" class="hi">group_by(:sourcefile, :class).</div>
+  <div data-hilight-idx="2" class="hi">sort_by_count.</div>
   to_text</code></pre>
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
 
   <pre class="fragment"><code class="no-highlight" data-noescape>               sourcefile                             class               count
 -----------------------------------------  ------------------------------  -----
-&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     String                             38
+<div data-hilight-idx="3" class="hi">&lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     String                             38
 &lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   String                             21
-&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Array                              12
+&lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Array                              12</div>
 &lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   Method                              5
 &lt;RUBYLIBDIR&gt;/psych/scalar_scanner.rb       String                              5
 &lt;RUBYLIBDIR&gt;/psych/visitors/visitor.rb     MatchData                           5
@@ -634,6 +640,7 @@ puts stats.allocations(alias_paths: true).
 &lt;RUBYLIBDIR&gt;/psych/visitors/yaml_tree.rb   MatchData                           3
 &lt;RUBYLIBDIR&gt;/psych/visitors/emitter.rb     String                              3
 ...</code></pre>
+  <span class="fragment" data-hilight-idx="3" style="display: none;"></span>
 </section>
 
 <section data-state="teal-bg" class="hilights">

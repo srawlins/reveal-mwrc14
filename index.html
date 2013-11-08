@@ -969,8 +969,7 @@ index a2235c0..f1e5a70 100644
 <div data-hilight-idx="1" class="hi"> 81    send("_run_#{kind}_callbacks", *args, &block)</div>
  82  end
 
-...
-
+<div class="ellipsis">...</div>
 413  def __callback_runner_name(key, kind)
 <div data-hilight-idx="1" class="hi">414    "_run__#{self.name.hash.abs}__#{kind}__#{key.hash.abs}__callbacks"</div>
 415  end
@@ -1008,21 +1007,18 @@ index a2235c0..f1e5a70 100644
       <a href="https://github.com/rails/rails/blob/v3.2.15/activerecord/lib/active_record/relation.rb#L6" target="_blank">active_record/relation.rb</a>
     </h3>
     <pre><code class="ruby" data-trim data-noescape>
-class ActiveRecord::Relation
-  <div data-hilight-idx="1" class="hi">ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
-MULTI_VALUE_METHODS = [:select, :group, :order, :joins, :where, :having, :bind]
-SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :from, :reordering,
+&nbsp;&nbsp;6 class ActiveRecord::Relation
+  7   JoinOperation = Struct.new(:relation, :join_class, :on)
+<div data-hilight-idx="1" class="hi">  8   ASSOCIATION_METHODS = [:includes, :eager_load, :preload]
+  9   MULTI_VALUE_METHODS = [:select, :group, :order, :joins, :where, :having, :bind]
+ 10   SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :from, :reordering,
                                                          :reverse_order, :uniq]</div>
-
-  def initialize(klass, table)
-
-    ...
-
-    <div data-hilight-idx="1" class="hi">SINGLE_VALUE_METHODS</div>.each {|v| <div data-hilight-idx="2" class="hi">instance_variable_set(:"@#{v}_value", nil)</div>}
-    <div data-hilight-idx="1" class="hi">(ASSOCIATION_METHODS + MULTI_VALUE_METHODS)</div>.each {|v|
+<div class="ellipsis">...</div>&nbsp;19   def initialize(klass, table)
+<div class="ellipsis">...</div>&nbsp;26     <div data-hilight-idx="1" class="hi">SINGLE_VALUE_METHODS</div>.each {|v| <div data-hilight-idx="2" class="hi">instance_variable_set(:"@#{v}_value", nil)</div>}
+ 27     <div data-hilight-idx="1" class="hi">(ASSOCIATION_METHODS + MULTI_VALUE_METHODS)</div>.each {|v|
                                       <div data-hilight-idx="2" class="hi">instance_variable_set(:"@#{v}_values", [])</div>}
-
-    ...
+ <div class="ellipsis">...</div>
+ 30   end
     </code></pre>
     <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
     <span class="fragment" data-hilight-idx="2" style="display: none;"></span>

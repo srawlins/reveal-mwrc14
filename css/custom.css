@@ -143,6 +143,14 @@ pre .attribute {
   box-shadow: none;
 }
 
+/* ellipsis */
+.reveal .slides .ellipsis {
+  color: #999999;
+  font-size: 0.8em;
+  letter-spacing: 0.15em;
+  line-height: 0.9;
+}
+
 /*overriding reveal.js */
 .reveal section img {
   background: none;

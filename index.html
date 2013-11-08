@@ -1029,47 +1029,50 @@ SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :from, :reordering,
   </section>
 </section>
 
-<section data-state="blue-bg">
+<section data-state="blue-bg" class="hilights">
   <h2>Not Always Easy</h2>
   <p>
     <a href="https://github.com/rails/rails/blob/v3.2.15/activesupport/lib/active_support/core_ext/string/output_safety.rb#L184" target="_blank">active_support/core_ext/string/output_safety.rb:184</a>
   </p>
-  <pre><code class="ruby" data-noescape>class SafeBuffer &lt; String
-  def initialize(*)
-    @html_safe = true
-    super
-  end
-end
+  <pre><code class="ruby" data-noescape> 88 class SafeBuffer &lt; String
+<div class="ellipsis">...</div>117   def initialize(*)
+118     @html_safe = true
+119     super
+120   end
+<div class="ellipsis">...</div>179 end
 
-class String
-  def html_safe
-    ActiveSupport::SafeBuffer.new(self) <span style="color: red;">&lt;== line 184</span>
-  end
-end</code></pre>
+182 class String
+183   def html_safe
+<div data-hilight-idx="1" class="hi">184     ActiveSupport::SafeBuffer.new(self)</div>
+185   end
+186 end</code></pre>
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
 </section>
 
 <section data-state="blue-bg">
   <h2>Not Always Easy</h2>
   <p>
-    <a href="https://github.com/rails/rails/blob/v4.0.1/actionpack/lib/action_view/helpers/tag_helper.rb#L66" target="_blank">action_view/helpers/tag_helper.rb:66</a>
+    <a href="https://github.com/rails/rails/blob/v4.0.1/actionpack/lib/action_view/helpers/tag_helper.rb#L65" target="_blank">action_view/helpers/tag_helper.rb:65</a>
   </p>
-  <pre style="width: 93%;"><code class="ruby" data-noescape>def tag(name, options = nil, open = false, escape = true)
-  "<#{name}#{tag_options(options, escape) if options}#{open ? ">" : "/>"}".html_safe
-end</code></pre>
+  <pre style="width: 93%;"><code class="ruby" data-noescape>64 def tag(name, options = nil, open = false, escape = true)
+65  "<#{name}#{tag_options(options, escape) if options}#{open ? ">" : "/>"}".html_safe
+66 end</code></pre>
 </section>
 
-<section data-state="blue-bg">
+<section data-state="blue-bg" class="hilights">
   <h2>Not Always Easy</h2>
   <p>
     <a href="https://github.com/sparklemotion/sqlite3-ruby/blob/v1.3.8/lib/sqlite3/statement.rb#L108" target="_blank">sqlite3/statement.rb:108</a>
   </p>
-  <pre><code class="ruby" data-noescape>def each
-  loop do
-    val = step    <span style="color: red;">&lt;== line 108</span>
-    break self if done?
-    yield val
-  end
-end</code></pre>
+  <pre><code class="ruby" data-noescape>106 def each
+107   loop do
+<div data-hilight-idx="1" class="hi">108     val = step</div>
+109     break self if done?
+110     yield val
+111  end
+112 end</code></pre>
+  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+
   <ul>
     <li class="fragment">Where is <code>#step</code>?</li>
     <li class="fragment">

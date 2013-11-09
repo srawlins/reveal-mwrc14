@@ -662,47 +662,48 @@ puts stats.allocations(alias_paths: true).
 require 'allocation_stats'
 
 stats = AllocationStats.trace do
-  path = $:.detect { |p| p =~ /hike/ }
+<div data-hilight-idx="1" class="hi">  path = $:.detect { |p| p =~ /hike/ }
   path = File.dirname(path)
 
   trail = Hike::Trail.new path
   trail.append_extension ".rb"
   trail.append_paths "lib"
 
-  trail.find("hike")
+  trail.find("hike")</div>
 end
 
 puts stats.allocations(alias_paths: true)
-          .group_by(<div data-hilight-idx="1" class="hi">:sourcefile, :class_plus</div>)
+          .group_by(<div data-hilight-idx="2" class="hi">:sourcefile, :class_plus</div>)
           .sort_by_count
           .to_text</code></pre>
 
   <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
 
   <pre class="fragment"
        style="font-size: 0.51em;"
        data-nm8-css="{ 'top': '-17em', 'left': '2.5em' }"
        ><code class="no-highlight" data-noescape>                   sourcefile                              class_plus           count
 -------------------------------------------------  ---------------------------  -----
-<div data-hilight-idx="3" class="hi red">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   String                         438</div>
+<div data-hilight-idx="4" class="hi red">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   String                         438</div>
 &lt;RUBYLIBDIR&gt;/pathname.rb                           String                         152
-<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Fixnum,FalseClass&gt;       134</div>
+<div data-hilight-idx="4" class="hi red"><div data-hilight-idx="3" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Fixnum,FalseClass&gt;       134</div>
 &lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   RubyVM::InstructionSequence    105</div>
 examples/hike_hike.rb                              String                          81
-<div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/pathname.rb                           Array&lt;String&gt;                   67</div>
+<div data-hilight-idx="3" class="hi">&lt;RUBYLIBDIR&gt;/pathname.rb                           Array&lt;String&gt;                   67</div>
 &lt;RUBYLIBDIR&gt;/pathname.rb                           String                          67
-<div data-hilight-idx="3" class="hi red"><div data-hilight-idx="2" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Array&gt;                    58</div>
+<div data-hilight-idx="4" class="hi red"><div data-hilight-idx="3" class="hi">&lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array&lt;Array&gt;                    58</div>
 &lt;RUBYLIBDIR&gt;/rubygems/core_ext/kernel_require.rb   Array                           47
 &lt;RUBYLIBDIR&gt;/rubygems.rb                           String                          27</div>
 &lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                          21
-<div data-hilight-idx="3" class="hi red">examples/hike_hike.rb                              RubyVM::InstructionSequence     20</div>
+<div data-hilight-idx="4" class="hi red">examples/hike_hike.rb                              RubyVM::InstructionSequence     20</div>
 &lt;RUBYLIBDIR&gt;/pathname.rb                           String                          20
 examples/hike_hike.rb                              Array                           16
 &lt;GEMDIR&gt;/gems/hike-1.2.3/lib/hike/index.rb         String                          15
 ...</code></pre>
 
-  <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
   <span class="fragment" data-hilight-idx="3" style="display: none;"></span>
+  <span class="fragment" data-hilight-idx="4" style="display: none;"></span>
 </section>
 
 <section data-state="teal-bg" class="hilights">
@@ -770,7 +771,7 @@ puts stats.allocations(alias_paths: true)
   <div class="right half">/path<br />?foo=bar<br /><span class="fragment">&amp;<em>ras[trace]=true</em></span></p>
 </section>
 
-<section data-state="blue-bg" id="sinatra-app">
+<section data-state="blue-bg" id="sinatra-app" class="hilights">
   <h2 class="trans">
     <span id="sin1-h2">A Simple Sinatra App</span>
     <span id="sin2-h2" style="position: absolute; left: 0; display: none;">localhost:9292/erb</span>
@@ -781,20 +782,20 @@ puts stats.allocations(alias_paths: true)
   <div style="position: relative;">
     <div class="code sinatra-app" id="sin1">
       <pre><code class="ruby" data-noescape>class SinatraTemplatesApp &lt; Sinatra::Base
-  HELLOS = ["Hello", "Hola", "Bonjour", "Gutentag",
-            "こんにちは", "привет"]
+<div data-hilight-idx="2" class="hi">  HELLOS = ["Hello", "Hola", "Bonjour", "Guten Tag",
+            "こんにちは", "привет"]</div>
 
   enable :inline_templates
 
-  get "/erb" do
+<div data-hilight-idx="1" class="hi">  get "/erb" do
     erb :erb
-  end
+  end</div>
 end
 
 __END__
 
 @@ erb</code></pre>
-    <pre><code class="xml">&lt;html&gt;
+    <pre><code class="xml" data-noescape><div data-hilight-idx="2" class="hi">&lt;html&gt;
   &lt;body&gt;
     &lt;ul id="hi"&gt;
       &lt;% HELLOS.each do |hello| %&gt;
@@ -802,8 +803,10 @@ __END__
       &lt;% end %&gt;
     &lt;/ul&gt;
   &lt;/body&gt;
-&lt;/html&gt;</code></pre>
+&lt;/html&gt;</div></code></pre>
     </div>
+    <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+    <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
     <img src="img/ras_01.png"
          class="fragment"
          id="sin2"

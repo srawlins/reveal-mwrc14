@@ -41,10 +41,10 @@
 </section>
 
 <section data-state="default">
-  <h2>Ruby 2.1.0-preview1 is out!</h2>
+  <h2>Ruby 2.1 is out!</h2>
   <ul style="list-style-type: none;">
-    <li class="fragment"><code>$ rbenv install 2.1.0-preview1</code></li>
-    <li class="fragment"><code>$ rvm install ruby-2.1.0-preview1</code></li>
+    <li class="fragment"><code>$ rbenv install 2.1</code></li>
+    <li class="fragment"><code>$ rvm install ruby-2.1</code></li>
   </ul>
 </section>
 
@@ -363,16 +363,11 @@ with all sufficient information, see the ChangeLog file.
 
   <ul>
     <li><code>ObjectSpace.trace_object_allocations</code></li>
-    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_start</code><sup>*</sup></li>
-    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_stop</code><sup>*</sup></li>
-    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_clear</code><sup>*</sup></li>
+    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_start</code></li>
+    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_stop</code></li>
+    <li style="color: #BBB; margin-top: 0.2em;"><code>ObjectSpace.trace_object_allocations_clear</code></li>
     <li style="color: #BBB; margin-top: 0.2em;"><code>...</code></li>
   </ul>
-
-  <p style="text-align: right; margin-top: 1em;">
-    <sup>*</sup>
-    <a href="https://github.com/ruby/ruby/commit/1450e0b5ac0a49aa1f0d1db521b293b18f6fa99c">2.1.0-preview2</a>
-  </p>
 </section>
 
 <section data-state="default">
@@ -500,19 +495,11 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 <section data-state="teal-bg">
   <h1>AllocationStats</h1>
 
+  <p style="margin-top: 1em;">requires unreleased Ruby 2.1.0<p>
+
   <footer>
     <a href="https://github.com/srawlins/allocation_stats">[github]</a>
   </footer>
-</section>
-
-<section data-state="teal-bg">
-  <h1>AllocationStats</h1>
-
-  <p style="margin-top: 1em;">requires unreleased Ruby 2.1.0-preview2 :(<p>
-  <ul style="list-style-type: none;">
-    <li class="fragment"><code>$ rbenv install 2.1.0-dev</code></li>
-    <li class="fragment"><code>$ rvm install ruby-trunk</code></li>
-  </ul>
 </section>
 
 <section data-state="teal-bg" id="ex2" class="hilights">
@@ -1122,7 +1109,7 @@ index a2235c0..f1e5a70 100644
     <li class="fragment">Aman Gupta / @tmm1</li>
     <li class="fragment">GitHub</li>
     <li class="fragment">Matt Brooks</li>
-    <li class="fragment">Ruby Central</li>
+    <li class="fragment">Mike Moore for MWRC</li>
     <li class="fragment">Hakim El Hattab for reveal.js</li>
   </ul>
 </section>

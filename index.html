@@ -495,7 +495,7 @@ ObjectSpace.allocation_method_id(s)  #=&gt; "a_string"
 <section data-state="teal-bg">
   <h1>AllocationStats</h1>
 
-  <p style="margin-top: 1em;">requires unreleased Ruby 2.1.0<p>
+  <p style="margin-top: 1em;">requires Ruby 2.1<p>
 
   <footer>
     <a href="https://github.com/srawlins/allocation_stats">[github]</a>
@@ -738,6 +738,31 @@ puts stats.allocations(alias_paths: true)
 ...</code></pre>
 </section>
 
+<section data-state="teal-bg">
+  <h3>Run inside your specs</h3>
+
+  <pre class="fragmentX" style="font-size: 0.8em;"><code class="ruby" data-trim data-noescape># top of your spec_helper.rb
+
+require 'allocation_stats'
+AllocationStats.trace_rspec</code></pre>
+
+  <pre class="fragment" style="font-size: 0.7em;"><code class="no-highlight" data-trim data-noescape>mail$ be rspec spec/mail
+...
+Finished in 4 minutes 42.52 seconds
+1469 examples, 0 failures, 11 pending
+...
+Top 10 allocation sites:
+  String allocations at <PWD>/lib/mail/utilities.rb:180
+    4639 allocations during ./spec/mail/attachments_list_spec.rb:312
+    4443 allocations during ./spec/mail/message_spec.rb:1627
+    3975 allocations during ./spec/mail/network/retriever_methods/test_retriever_spec.rb:78
+  Array allocations at <PWD>/lib/mail/parsers/received_parser.rb:13
+    2326 allocations during ./spec/mail/message_spec.rb:1627
+    1690 allocations during ./spec/mail/example_emails_spec.rb:300
+  ...
+Total allocations: 855826</code></pre>
+</section>
+
 <section data-state="blue-bg">
   <h2>Object Churn</h2>
   <h3 class="fragment" style="margin-top: 2em;">Expensive Garbage Collection</h3>
@@ -914,6 +939,28 @@ index a2235c0..f1e5a70 100644
 </section>
 
 <section data-state="blue-bg">
+  <h1>String#freeze</h1>
+  <h2>(also Ruby 2.1)</h2>
+  <p class="fragment">String literals, when frozen, will always refer to the same object.</p>
+</section>
+
+<section data-state="blue-bg">
+  <h2>String#freeze</h2>
+  <pre style="font-size: 0.7em;"><code class="ruby" data-noescape>STRING = "This is a static string"
+def no_freeze
+  STRING.tr(" ", "_") &lt;&lt; "not frozen"
+end
+
+def freeze
+  STRING.tr(" ".freeze, "_".freeze) &lt;&lt; "frozen".freeze
+end</code></pre>
+
+  <pre class="fragment" style="font-size: 0.7em;"><code class="no-highlight" data-noescape>  user   system   total    real       gc    allocations
+  9.380   0.100   9.480 (  9.502)    1.724     1600000
+  7.110   0.050   7.160 (  7.190)    1.098      400000</code></pre>
+</section>
+
+<section data-state="blue-bg">
   <section>
     <h1>Rails 3.2.15</h1>
   </section>
@@ -994,27 +1041,6 @@ index a2235c0..f1e5a70 100644
     <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
     <span class="fragment" data-hilight-idx="2" style="display: none;"></span>
   </section>
-</section>
-
-<section data-state="blue-bg">
-  <h2>String#freeze</h2>
-  <p>String literals, when frozen, will always refer to the same object.</p>
-</section>
-
-<section data-state="blue-bg">
-  <h2>String#freeze</h2>
-  <pre style="font-size: 0.7em;"><code class="ruby" data-noescape>STRING = "This is a static string"
-def no_freeze
-  STRING.tr(" ", "_") &lt;&lt; "not frozen"
-end
-
-def freeze
-  STRING.tr(" ".freeze, "_".freeze) &lt;&lt; "frozen".freeze
-end</code></pre>
-
-  <pre style="font-size: 0.7em;"><code class="no-highlight" data-noescape>  user   system   total    real       gc    allocations
-  9.380   0.100   9.480 (  9.502)    1.724     1600000
-  7.110   0.050   7.160 (  7.190)    1.098      400000</code></pre>
 </section>
 
 <section data-state="blue-bg">

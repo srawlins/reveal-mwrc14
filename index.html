@@ -842,37 +842,8 @@ ras[scope]=SCOPE
 
 <section data-state="blue-bg">
   <h2>?ras[times]=10</h2>
-</section>
-
-<section data-state="blue-bg">
+  <h2>&nbsp;</h2>
   <h2>?ras[output]=json</h2>
-  <pre class="fragment-parent"
-       data-nm8-css="{ 'left': '-3em', 'opacity': 0.6 }"
-       ><code class="no-highlight" style="word-wrap: break-word;">[{"group_key":["/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",445,"String"],"allocations":[{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},{"memsize":0,"class_path":"String","method_id":"scan","file":"&lt;RUBYLIBDIR&gt;/erb.rb","file (raw)":"/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb","line":445,"class":"String","class_plus":"String"},...</code></pre>
-
-  <pre class="fragment"
-       style="width: 93%;"
-       data-nm8-css="{ 'top': '-12em', 'left': '3em' }"
-       ><code class="json" style="max-height: 430px;">[
-  { "group_key": [
-      "/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",
-      445,
-      "String"
-    ],
-    "allocations": [
-      { "memsize": 0,
-        "class_path": "String",
-        "method_id": "scan",
-        "file": "&lt;RUBYLIBDIR&gt;/erb.rb",
-        "file (raw)": "/usr/local/rbenv/versions/2.1.0-dev/lib/ruby/2.1.0/erb.rb",
-        "line": 445,
-        "class": "String",
-        "class_plus": "String" },
-      ...
-    ]
-  },
-  ...
-]</code></pre>
 </section>
 
 <section data-state="blue-bg">
@@ -1025,24 +996,25 @@ index a2235c0..f1e5a70 100644
   </section>
 </section>
 
-<section data-state="blue-bg" class="hilights">
-  <h2>Not Always Easy</h2>
-  <p>
-    <a href="https://github.com/rails/rails/blob/v3.2.15/activesupport/lib/active_support/core_ext/string/output_safety.rb#L184" target="_blank">active_support/core_ext/string/output_safety.rb:184</a>
-  </p>
-  <pre><code class="ruby" data-noescape> 88 class SafeBuffer &lt; String
-<div class="ellipsis">...</div>117   def initialize(*)
-118     @html_safe = true
-119     super
-120   end
-<div class="ellipsis">...</div>179 end
+<section data-state="blue-bg">
+  <h2>String#freeze</h2>
+  <p>String literals, when frozen, will always refer to the same object.</p>
+</section>
 
-182 class String
-183   def html_safe
-<div data-hilight-idx="1" class="hi">184     ActiveSupport::SafeBuffer.new(self)</div>
-185   end
-186 end</code></pre>
-  <span class="fragment" data-hilight-idx="1" style="display: none;"></span>
+<section data-state="blue-bg">
+  <h2>String#freeze</h2>
+  <pre style="font-size: 0.7em;"><code class="ruby" data-noescape>STRING = "This is a static string"
+def no_freeze
+  STRING.tr(" ", "_") &lt;&lt; "not frozen"
+end
+
+def freeze
+  STRING.tr(" ".freeze, "_".freeze) &lt;&lt; "frozen".freeze
+end</code></pre>
+
+  <pre style="font-size: 0.7em;"><code class="no-highlight" data-noescape>  user   system   total    real       gc    allocations
+  9.380   0.100   9.480 (  9.502)    1.724     1600000
+  7.110   0.050   7.160 (  7.190)    1.098      400000</code></pre>
 </section>
 
 <section data-state="blue-bg">
